@@ -1,5 +1,5 @@
 // const { dbUsers } = require("../models/user");
-const { Pet } = require("../models/pet");
+const { Pet } = require("../../models/pet");
 
 // const { Conflict, Unauthorized, NotFound } = require('http-errors');
 
@@ -21,6 +21,4 @@ const getCurrentUser = async (req, res, next) => {
   });
 };
 
-module.exports = {
-  getCurrentUser,
-};
+module.exports = getCurrentUser
