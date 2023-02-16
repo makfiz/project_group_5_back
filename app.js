@@ -10,6 +10,7 @@ const { friendsRouter } = require("./src/routes/api/friends");
 const authRouter = require("./src/routes/api/user");
 
 const app = express();
+const { routerNotices } = require("./src/routes/notices/notices");
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
@@ -22,6 +23,8 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/users", authRouter);
 app.use("/api/friends", friendsRouter);
 
+
+app.use("/notices", routerNotices);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
