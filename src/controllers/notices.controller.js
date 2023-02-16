@@ -1,3 +1,5 @@
+const { dbNOtice } = require("../models/notice");
+
 const getAllNoticesByCategoryController = async (req, res, next) => {};
 const getOneNoticeByIdController = async (req, res, next) => {};
 
