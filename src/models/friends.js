@@ -37,8 +37,8 @@ const schema = mongoose.Schema(
   }
 );
 
-const dbFriends = mongoose.model("sponsors", schema);
+const Friends = mongoose.model("sponsors", schema);
 
 module.exports = {
-  dbFriends,
+  Friends,
 };
