@@ -20,10 +20,7 @@ router.get(
   tryCatchWrapper(getAllNoticesByCategoryController)
 );
 // створити ендпоінт для отримання одного оголошення
-router.get(
-  "/:categoryName/:noticeId",
-  tryCatchWrapper(getOneNoticeByIdController)
-);
+router.get("/id/:noticeId", tryCatchWrapper(getOneNoticeByIdController));
 
 // Restricted routes
 // створити ендпоінт для додавання оголошення до обраних

@@ -54,9 +54,12 @@ const notice = new Schema(
       type: Array,
     },
 
+    // owner: {
+    //   type: Schema.Types.ObjectId,
+    //   ref: "user",
+    // },
     owner: {
-      type: Schema.Types.ObjectId,
-      ref: "user",
+      type: Number,
     },
   },
   { versionKey: false, timestamps: true }
