@@ -10,7 +10,7 @@ const {
   addNoticeByCategoryController,
   getOwnNoticesController,
   deleteOwnNoticeController,
-} = require("../../controllers/notices");
+} = require("../../controllers/notices.controller");
 
 // створити ендпоінт для отримання оголошень по категоріям
 router.get("/:categoryName", getAllNoticesByCategoryController);
