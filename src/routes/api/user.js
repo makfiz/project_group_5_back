@@ -2,16 +2,14 @@ const express = require("express");
 
 const authRouter = express.Router();
 const { joiSchemaUser } = require("../../schemas/user");
+
 const { getCurrentUser } = require("../../controllers/user.controller");
-const {
-  registerUser,
-  loginUser,
-  verifyMail,
-  logoutUser,
-} = require("../../controllers/user");
+
+const { registerUser, loginUser, verifyMail, logoutUser, getCurrentUser } = require("../../controllers/user");
+
 const { tryCatchWrapper } = require("../../helpers");
 const authIdent = require("../../middlewares/authIdent");
-const upload = require("../../middlewares/upload");
+// const upload = require("../../middlewares/upload");
 const validateBody = require("../../middlewares/validateBody");
 
 authRouter.post(
@@ -27,6 +25,7 @@ authRouter.post(
 );
 authRouter.get("/logout", authIdent, tryCatchWrapper(logoutUser));
 authRouter.get("/me", authIdent, tryCatchWrapper(getCurrentUser));
+
 
 module.exports = {
   authRouter,
