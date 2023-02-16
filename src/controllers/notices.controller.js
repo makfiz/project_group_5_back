@@ -1,7 +1,13 @@
 const { dbNotice } = require("../models/notice");
 
+// const { HttpError } = require("../helpers/httpError");
+
 const getAllNoticesByCategoryController = async (req, res, next) => {
-  return res.status(200).json({ status: "true" });
+  const { category } = req.params;
+
+  const notices = await dbNotice.find({ category });
+
+  return res.status(200).json(notices);
 };
 
 const getOneNoticeByIdController = async (req, res, next) => {
