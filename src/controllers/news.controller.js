@@ -1,10 +1,12 @@
-// const { dbUsers } = require('../models/user');
-// const { Conflict, Unauthorized, NotFound } = require('http-errors');
+const { dbNews } = require('../models/news');
 
 
 async function getNews(req, res, next) {
-    return res.status(200).json({massage: "news from JO"})
+    const news = await dbNews.find();
+
+    return res.status(200).json(news)
     } 
+
     module.exports = {
         getNews,
     };
