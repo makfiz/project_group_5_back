@@ -23,7 +23,7 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use("/api/users", authRouter);
 app.use("/api/friends", friendsRouter);
 app.use("/api/news", newsRouter);
-app.use("api/notices", routerNotices);
+app.use("/api/notices", routerNotices);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
