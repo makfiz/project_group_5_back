@@ -3,7 +3,9 @@ const router = express.Router();
 const { joiSchemaUser } = require("../../schemas/user");
 const { registerUser, loginUser, verifyMail, logoutUser } = require("../../controllers/user");
 const { tryCatchWrapper } = require("../../helpers");
-const { authIdent, upload, validateBody } = require("../../middlewares");
+const authIdent = require("../../middlewares/authIdent");
+const upload = require("../../middlewares/upload");
+const validateBody = require("../../middlewares/validateBody");
 
 router.post('/signup', validateBody(joiSchemaUser.register), tryCatchWrapper(registerUser)); 
 router.get('/verify/:verificationToken', tryCatchWrapper(verifyMail));
