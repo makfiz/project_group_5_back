@@ -6,6 +6,9 @@ const {
   deleteUserPet,
   addUserPet,
 } = require("../../controllers/pet.controller");
+const authIdent = require("../../middlewares/authIdent.js");
+
+petRouter.use(authIdent);
 
 petRouter.post("/", tryCatchWrapper(addUserPet));
 petRouter.delete("/:petId", tryCatchWrapper(deleteUserPet));
