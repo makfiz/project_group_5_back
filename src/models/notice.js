@@ -2,9 +2,9 @@ const { Schema, model } = require("mongoose");
 
 const notice = new Schema(
   {
-    categoty: {
+    category: {
       type: String,
-      enum: ["sell", "lost/found", "in good hands"],
+      enum: ["sell", "lost_found", "in_good_hands"],
       required: [true, "Category is required"],
     },
     title: {
@@ -19,8 +19,7 @@ const notice = new Schema(
       maxLength: 16,
     },
     bitrh: {
-      type: Date,
-      // TODO: add Date format
+      type: String,
     },
     breed: {
       type: String,
@@ -35,12 +34,10 @@ const notice = new Schema(
     location: {
       type: String,
       required: [true, "Place is required"],
-      //   TODO: строка в форматі Місто, Область. Наприклад: Brovary, Kyiv або Akhtyrka, Sumy
     },
     price: {
-      type: Number,
+      type: String,
       required: [true, "Price is required"],
-      //   TODO: число, не повинно починатися 0 - (required)
     },
     photoURL: {
       type: String,
@@ -54,12 +51,9 @@ const notice = new Schema(
       type: Array,
     },
 
-    // owner: {
-    //   type: Schema.Types.ObjectId,
-    //   ref: "user",
-    // },
     owner: {
-      type: Number,
+      type: Schema.Types.ObjectId,
+      ref: "users",
     },
   },
   { versionKey: false, timestamps: true }
