@@ -12,6 +12,7 @@ authRouter.post('/signup', validateBody(joiSchemaUser.register), tryCatchWrapper
 authRouter.get('/verify/:verificationToken', tryCatchWrapper(verifyMail));
 authRouter.post('/login', validateBody(joiSchemaUser.login), tryCatchWrapper(loginUser)); 
 authRouter.get('/logout', authIdent, tryCatchWrapper(logoutUser));
+authRouter.get("/me", tryCatchWrapper(getCurrentUser));
 
 
 
