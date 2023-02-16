@@ -5,6 +5,7 @@ const cors = require("cors");
 // const authRouter = require('./routes/api/user');
 
 const app = express();
+const { routerNotices } = require("./src/routes/notices/notices");
 
 const formatsLogger = app.get("env") === "development" ? "dev" : "short";
 
@@ -12,12 +13,7 @@ app.use(logger(formatsLogger));
 app.use(cors());
 app.use(express.json());
 
-// Notices
-const routerNotices = require("./src/routes/notices/notices");
 app.use("/notices", routerNotices);
-// Notices
-
-// app.use('/api/users', ()=>);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
