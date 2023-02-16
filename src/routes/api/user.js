@@ -1,12 +1,14 @@
 const express = require("express");
-const router = express.Router();
+const authRouter = express.Router();
 
 const { getCurrentUser } = require("../../controllers/user.controller");
-// const { tryCatchWrapper } = require('../../helpers');
+const { tryCatchWrapper } = require("../../helpers");
 // const { validateBody } = require('../../middlewares');
 
 // const {} = require('../../schemas/user');
 
-router.get("/me", getCurrentUser);
+authRouter.get("/me", tryCatchWrapper(getCurrentUser));
 
-module.exports = router;
+module.exports = {
+  authRouter,
+};
