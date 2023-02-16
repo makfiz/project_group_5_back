@@ -1,4 +1,8 @@
 const { tryCatchWrapper } = require("../../helpers/index");
+const { validateParams } = require("../../middlewares/index");
+const {
+  schemaNoticesByCategory,
+} = require("../../schemas/notices/noticesByCategory");
 
 const express = require("express");
 const routerNotices = express.Router();
@@ -16,7 +20,8 @@ const {
 
 // створити ендпоінт для отримання оголошень по категоріям
 routerNotices.get(
-  "/:categoryName",
+  "/:category",
+  validateParams(schemaNoticesByCategory),
   tryCatchWrapper(getAllNoticesByCategoryController)
 );
 // створити ендпоінт для отримання одного оголошення
