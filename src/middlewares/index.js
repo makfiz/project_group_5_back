@@ -1,16 +1,9 @@
-const { BadRequest } = require('http-errors');
-
-function validateBody(schema) {
-  return (req, res, next) => {
-    const { error } = schema.validate(req.body);
-    if (error) {
-      return next(BadRequest(error.message));
-    }
-
-    return next();
-  };
-}
+const authIdent = require("./authIdent");
+const upload = require("./upload");
+const validateBody = require("./validateBody");
 
 module.exports = {
-  validateBody,
-};
+	authIdent,
+	upload,
+	validateBody,
+}

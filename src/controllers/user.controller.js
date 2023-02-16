@@ -12,7 +12,6 @@ const getCurrentUser = async (req, res, next) => {
           avatar,
           name,
           email,
-          birthday,
           phone,
           city,
         },
