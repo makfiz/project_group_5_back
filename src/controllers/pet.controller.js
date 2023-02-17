@@ -12,6 +12,7 @@ const addUserPet = async (req, res) => {
     throw new HttpError(400, `Unable to create new Pet`);
   }
   await dbUsers.updateOne({ _id: owner }, { $push: { pets: newMyPet._id } });
+
   res.status(201).json(newMyPet);
 };
 
