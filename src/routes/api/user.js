@@ -10,6 +10,7 @@ const {
   logoutUser,
   againVerifyMail,
   getCurrentUser,
+  updateUser,
 } = require("../../controllers/user");
 
 const { tryCatchWrapper } = require("../../helpers");
@@ -23,7 +24,7 @@ authRouter.post(
   tryCatchWrapper(registerUser)
 );
 authRouter.get("/verify/:verificationToken", tryCatchWrapper(verifyMail));
-authRouter.post('/verify', tryCatchWrapper(againVerifyMail));
+authRouter.post("/verify", tryCatchWrapper(againVerifyMail));
 authRouter.post(
   "/login",
   validateBody(joiSchemaUser.login),
@@ -31,6 +32,12 @@ authRouter.post(
 );
 authRouter.get("/logout", authIdent, tryCatchWrapper(logoutUser));
 authRouter.get("/me", authIdent, tryCatchWrapper(getCurrentUser));
+authRouter.patch(
+  "/update",
+  authIdent,
+  validateBody(joiSchemaUser.update),
+  tryCatchWrapper(updateUser)
+);
 
 module.exports = {
   authRouter,
