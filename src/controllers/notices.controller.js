@@ -1,6 +1,5 @@
 const createError = require("http-errors");
 const { dbNotice } = require("../models/notice");
-// const { HttpError } = require("../helpers/httpError");
 
 const getAllNoticesByCategoryController = async (req, res, next) => {
   const { category } = req.params;
@@ -9,7 +8,6 @@ const getAllNoticesByCategoryController = async (req, res, next) => {
 
   return res.status(200).json(notices);
 };
-
 
 const getOneNoticeByIdController = async (req, res, next) => {
   const { noticeId } = req.params;
@@ -51,7 +49,17 @@ const addNoticeToFavoriteController = async (req, res, next) => {
   return res.status(201).json({ notice });
 };
 
-const getFavoriteNoticesController = async (req, res, next) => {};
+const getFavoriteNoticesController = async (req, res, next) => {
+  const { _id } = req.user;
+
+  if (!_id) {
+    return next(createError(401, "Unathorized"));
+  }
+
+  const notices = await dbNotice.find({ favoritesIn: _id });
+
+  return res.status(200).json({ notices });
+};
 
 const deleteNoticeFromFavoriteController = async (req, res, next) => {
   // TODO: Real user ID

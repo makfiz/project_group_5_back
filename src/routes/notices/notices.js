@@ -34,7 +34,10 @@ routerNotices.post(
   tryCatchWrapper(addNoticeToFavoriteController)
 );
 // створити ендпоінт для отримання оголошень авторизованого користувача доданих ним же в обрані
-routerNotices.get("/favorite", tryCatchWrapper(getFavoriteNoticesController));
+routerNotices.get(
+  "/:userId/favorite",
+  tryCatchWrapper(getFavoriteNoticesController)
+);
 // створити ендпоінт для видалення оголошення авторизованого користувача доданих цим же до обраних
 routerNotices.delete(
   "/:noticeId/favorite",
