@@ -6,7 +6,7 @@ async function updateUser(req, res, next) {
 
   const result = await dbUsers.findByIdAndUpdate(_id, req.body, { new: true });
   if (!result) {
-    next(HttpError(404, "User not found"));
+    next(HttpError(404, "Not found"));
   }
   res.json({
     _id: result._id,
