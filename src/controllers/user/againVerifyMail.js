@@ -17,8 +17,8 @@ const againVerifyMail = async (req, res) => {
     throw new HttpError(404, error.message);
   };
 
-  const { verify, verificationToken } = user;
-  if (verify) {
+  const { verifyEmail, verificationToken } = user;
+  if (verifyEmail) {
     throw new HttpError(400, "Verification has already been passed");
   }
 
