@@ -2,6 +2,7 @@ const express = require("express");
 
 const authRouter = express.Router();
 const { joiSchemaUser } = require("../../schemas/user");
+
 const {
   registerUser,
   loginUser,

@@ -6,7 +6,7 @@ const schemaNoticesByCategory = Joi.object({
     .required()
     .messages({
       "any.valid": "This category is not valid",
-      //   "any.required": "Category is required",
+      "any.required": "Category is required",
     }),
 });
 
