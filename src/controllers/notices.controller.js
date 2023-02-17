@@ -3,16 +3,40 @@ const { dbNotice } = require("../models/notice");
 
 const getAllNoticesByCategoryController = async (req, res, next) => {
   const { category } = req.params;
-
   const notices = await dbNotice.find({ category });
-
   return res.status(200).json(notices);
+};
+
+const getAllNoticesByCategoryPaginatedController = async (req, res, next) => {
+  const { category } = req.params;
+  const { page = 1, limit = 20 } = req.query;
+  const pageLimit = +limit > 20 ? 20 : +limit;
+  const skip = +limit * +page - +limit;
+
+  const notices = await dbNotice
+    .find({ category })
+    .skip(skip)
+    .limit(pageLimit)
+    .sort({ updatedAt: -1 });
+  return res.status(200).json({ notices });
+};
+
+const getAllNoticesBySearchController = async (req, res, next) => {
+  const { page = 1, limit = 20, search } = req.query;
+  const pageLimit = +limit > 20 ? 20 : +limit;
+  const skip = +limit * +page - +limit;
+
+  const notices = await dbNotice
+    .find({ title: { $regex: new RegExp(search, "i") } })
+    .skip(skip)
+    .limit(pageLimit)
+    .sort({ updatedAt: -1 });
+  return res.status(200).json({ notices });
 };
 
 const getOneNoticeByIdController = async (req, res, next) => {
   const { noticeId } = req.params;
   const notice = await dbNotice.findById(noticeId);
-
   if (!notice) {
     return next(createError(404, "Notfound"));
   }
@@ -21,9 +45,7 @@ const getOneNoticeByIdController = async (req, res, next) => {
 
 // Restricted routes
 const addNoticeToFavoriteController = async (req, res, next) => {
-  // TODO: Real user ID
-
-  const userId = "63ede7848e4c3519b635f08b";
+  const { _id: userId } = req.user;
   if (!userId) {
     return next(createError(401, "Unathorized"));
   }
@@ -35,8 +57,9 @@ const addNoticeToFavoriteController = async (req, res, next) => {
   }
   const { favoritesIn } = askedNotice;
   if (favoritesIn.includes(userId)) {
-    return next(createError(409, "Already in favorites"));
+    return next(createError(400, "Already in favorites"));
   }
+
   const notice = await dbNotice.findByIdAndUpdate(
     noticeId,
     { favoritesIn: [...favoritesIn, userId] },
@@ -62,8 +85,7 @@ const getFavoriteNoticesController = async (req, res, next) => {
 };
 
 const deleteNoticeFromFavoriteController = async (req, res, next) => {
-  // TODO: Real user ID
-  const userId = "63ede7848e4c3519b635f08b";
+  const { _id: userId } = req.user;
   if (!userId) {
     return next(createError(401, "Unathorized"));
   }
@@ -74,10 +96,15 @@ const deleteNoticeFromFavoriteController = async (req, res, next) => {
   if (!askedNotice) {
     return next(createError(404, "Not found"));
   }
+
   const { favoritesIn } = askedNotice;
   const updatedNotice = await dbNotice.findByIdAndUpdate(
     noticeId,
-    { favoritesIn: favoritesIn.filter((id) => id !== userId) },
+    {
+      favoritesIn: favoritesIn.filter(
+        (id) => id.toString() !== userId.toString()
+      ),
+    },
     {
       new: true,
       runValidators: true,
@@ -88,8 +115,7 @@ const deleteNoticeFromFavoriteController = async (req, res, next) => {
 };
 
 const addNoticeByCategoryController = async (req, res, next) => {
-  // TODO: Real user ID
-  const userId = "73ede7848e4c3519b635f08b";
+  const { _id: userId } = req.user;
   if (!userId) {
     return next(createError(401, "Unathorized"));
   }
@@ -148,4 +174,6 @@ module.exports = {
   addNoticeByCategoryController,
   getOwnNoticesController,
   deleteOwnNoticeController,
+  getAllNoticesByCategoryPaginatedController,
+  getAllNoticesBySearchController,
 };
