@@ -7,6 +7,7 @@ const {
   loginUser,
   verifyMail,
   logoutUser,
+  againVerifyMail,
   getCurrentUser,
 } = require("../../controllers/user");
 
@@ -21,6 +22,7 @@ authRouter.post(
   tryCatchWrapper(registerUser)
 );
 authRouter.get("/verify/:verificationToken", tryCatchWrapper(verifyMail));
+authRouter.post('/verify', tryCatchWrapper(againVerifyMail));
 authRouter.post(
   "/login",
   validateBody(joiSchemaUser.login),
