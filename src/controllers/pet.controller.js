@@ -3,18 +3,31 @@ const { HttpError } = require("../helpers/httpError");
 const { dbUsers } = require("../models/user");
 
 const addUserPet = async (req, res) => {
-  const { _id: owner } = req.user;
-  const newMyPet = await Pet.create({
-    ...req.body,
-    owner,
-  });
-  if (!newMyPet) {
-    throw new HttpError(400, `Unable to create new Pet`);
-  }
-  await dbUsers.updateOne({ _id: owner }, { $push: { pets: newMyPet._id } });
+  const owner = req.user.id;
+  const petData = req.body;
+  const data = !!req.file
+    ? { petImage: req.file.path, owner, ...petData }
+    : { owner, ...petData };
 
-  res.status(201).json(newMyPet);
-};
+  await Pet.create(data)
+    .then((pet) => {
+      if (pet) {
+      dbUsers.findByIdAndUpdate(owner, { $push: { pets: pet._id } })
+          .then((user) => {
+            if (user) {
+              res.status(201).json(pet);
+            }
+          })
+          .catch((err) => {
+            throw new Error(err);
+          });
+      }
+    })
+    .catch((err) =>
+      res.status(400).json({ message: "Unable to create new Pet" })
+  );
+}
+
 
 const deleteUserPet = async (req, res) => {
   const { petId } = req.params;
