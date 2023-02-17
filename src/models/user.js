@@ -42,12 +42,6 @@ const schema = mongoose.Schema(
       type: String,
       default: null,
     },
-    pets: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'pet'
-      }
-    ],
     verifyEmail: {
       type: Boolean,
       default: false,

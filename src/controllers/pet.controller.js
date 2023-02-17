@@ -9,24 +9,14 @@ const addUserPet = async (req, res) => {
     ? { petImage: req.file.path, owner, ...petData }
     : { owner, ...petData };
 
-  await Pet.create(data)
-    .then((pet) => {
-      if (pet) {
-      dbUsers.findByIdAndUpdate(owner, { $push: { pets: pet._id } })
-          .then((user) => {
-            if (user) {
-              res.status(201).json(pet);
-            }
-          })
-          .catch((err) => {
-            throw new Error(err);
-          });
-      }
-    })
-    .catch((err) =>
-      res.status(400).json({ message: "Unable to create new Pet" })
-  );
-}
+const newMyPet = await Pet.create(data);
+  if (!newMyPet) {
+    throw new HttpError(400, `Unable to create new Pet`);
+  }
+  
+  res.status(201).json(newMyPet);
+};
+
 
 
 const deleteUserPet = async (req, res) => {
@@ -36,10 +26,7 @@ const deleteUserPet = async (req, res) => {
   if (!deletedPet) {
     throw new HttpError(404, `Pet not found`);
   }
-  await dbUsers.updateOne(
-    { _id: deletedPet.owner },
-    { $pull: { pets: { $in: [deletedPet._id] } } }
-  );
+ 
   res.json({
     message: `pet deleted`,
   });
