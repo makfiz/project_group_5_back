@@ -1,11 +1,15 @@
+const express = require("express");
+const routerNotices = express.Router();
+
 const { tryCatchWrapper } = require("../../helpers/index");
 const { validateBody } = require("../../middlewares/index");
 const {
   schemaNoticesByCategory,
 } = require("../../schemas/notices/noticesByCategory");
-
-const express = require("express");
-const routerNotices = express.Router();
+const {
+  createNoticeSchema,
+} = require("../../schemas/notices/createNoticeSchema");
+const authIdent = require("../../middlewares/authIdent");
 
 const {
   getAllNoticesByCategoryController,
@@ -16,6 +20,8 @@ const {
   addNoticeByCategoryController,
   getOwnNoticesController,
   deleteOwnNoticeController,
+  getAllNoticesByCategoryPaginatedController,
+  getAllNoticesBySearchController,
 } = require("../../controllers/notices.controller");
 
 // створити ендпоінт для отримання оголошень по категоріям
@@ -24,10 +30,20 @@ routerNotices.get(
   validateBody(schemaNoticesByCategory),
   tryCatchWrapper(getAllNoticesByCategoryController)
 );
+// створити ендпоінт для отримання оголошень по категоріям + пагінація
+routerNotices.get(
+  "/:category/p",
+  tryCatchWrapper(getAllNoticesByCategoryPaginatedController)
+);
+// створити ендпоінт для отримання оголошень за пошуком в title по ключовому слову
+routerNotices.get(
+  "/all/find",
+  tryCatchWrapper(getAllNoticesBySearchController)
+);
 // створити ендпоінт для отримання одного оголошення
 routerNotices.get("/id/:noticeId", tryCatchWrapper(getOneNoticeByIdController));
-
 // Restricted routes
+routerNotices.use(authIdent);
 // створити ендпоінт для додавання оголошення до обраних
 routerNotices.post(
   "/:noticeId/favorite",
@@ -43,6 +59,7 @@ routerNotices.delete(
 // створити ендпоінт для додавання оголошень відповідно до обраної категорії
 routerNotices.post(
   "/:categoryName",
+  validateBody(createNoticeSchema),
   tryCatchWrapper(addNoticeByCategoryController)
 );
 // створити ендпоінт для отримання оголошень авторизованого кристувача створених цим же користувачем
