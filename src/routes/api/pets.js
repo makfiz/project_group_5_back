@@ -1,6 +1,6 @@
 const express = require("express");
-const validateBody = require('../../middlewares/validateBody');
-const { createPetSchema } = require('../../schemas/userPets');
+const validateBody = require("../../middlewares/validateBody");
+const { createPetSchema } = require("../../schemas/userPets");
 const authIdent = require("../../middlewares/authIdent");
 const petRouter = express.Router();
 
@@ -12,7 +12,12 @@ const {
 
 petRouter.use(authIdent);
 
-petRouter.post("/", authIdent, validateBody(createPetSchema), tryCatchWrapper(addUserPet));
+petRouter.post(
+  "/",
+  authIdent,
+  validateBody(createPetSchema),
+  tryCatchWrapper(addUserPet)
+);
 petRouter.delete("/:petId", tryCatchWrapper(deleteUserPet));
 
 module.exports = {

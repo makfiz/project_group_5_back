@@ -2,7 +2,7 @@ const express = require("express");
 const routerNotices = express.Router();
 
 const { tryCatchWrapper } = require("../../helpers/index");
-const { validateBody } = require("../../middlewares/index");
+const { validateBody, validateParams } = require("../../middlewares/index");
 const {
   schemaNoticesByCategory,
 } = require("../../schemas/notices/noticesByCategory");
@@ -27,7 +27,7 @@ const {
 // створити ендпоінт для отримання оголошень по категоріям
 routerNotices.get(
   "/:category",
-  validateBody(schemaNoticesByCategory),
+  validateParams(schemaNoticesByCategory),
   tryCatchWrapper(getAllNoticesByCategoryController)
 );
 // створити ендпоінт для отримання оголошень по категоріям + пагінація
@@ -50,7 +50,10 @@ routerNotices.post(
   tryCatchWrapper(addNoticeToFavoriteController)
 );
 // створити ендпоінт для отримання оголошень авторизованого користувача доданих ним же в обрані
-routerNotices.get("/favorite", tryCatchWrapper(getFavoriteNoticesController));
+routerNotices.get(
+  "/:userId/favorite",
+  tryCatchWrapper(getFavoriteNoticesController)
+);
 // створити ендпоінт для видалення оголошення авторизованого користувача доданих цим же до обраних
 routerNotices.delete(
   "/:noticeId/favorite",
@@ -63,7 +66,7 @@ routerNotices.post(
   tryCatchWrapper(addNoticeByCategoryController)
 );
 // створити ендпоінт для отримання оголошень авторизованого кристувача створених цим же користувачем
-routerNotices.get("/own", tryCatchWrapper(getOwnNoticesController));
+routerNotices.get("/own/:userId", tryCatchWrapper(getOwnNoticesController));
 // створити ендпоінт для видалення оголошення авторизованого користувача створеного цим же користувачем
 routerNotices.delete(
   "/own/:noticeId",
