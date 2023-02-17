@@ -101,8 +101,43 @@ const addNoticeByCategoryController = async (req, res, next) => {
   return res.status(201).json({ notice });
 };
 
-const getOwnNoticesController = async (req, res, next) => {};
-const deleteOwnNoticeController = async (req, res, next) => {};
+const getOwnNoticesController = async (req, res, next) => {
+  const { _id } = req.user;
+
+  if (!_id) {
+    return next(createError(401, "Unathorized"));
+  }
+
+  const notices = await dbNotice.find({ owner: _id });
+
+  return res.status(200).json({ notices });
+};
+
+const deleteOwnNoticeController = async (req, res, next) => {
+  const { _id } = req.user;
+
+  const { noticeId } = req.params;
+
+  if (!_id) {
+    return next(createError(401, "Unathorized"));
+  }
+
+  const notice = await dbNotice.findById(noticeId);
+
+  if (!notice) {
+    return next(createError(404, `Not found notice by id: ${contactId}`));
+  }
+
+  const ownerIdString = notice.owner.toString();
+
+  if (ownerIdString !== _id) {
+    return next(createError(403, "Forbidden"));
+  }
+
+  await dbNotice.findByIdAndRemove(noticeId);
+
+  return res.status(200).json({ message: "Notice deleted" });
+};
 
 module.exports = {
   getAllNoticesByCategoryController,
