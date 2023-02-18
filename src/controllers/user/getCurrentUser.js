@@ -7,7 +7,7 @@ const getCurrentUser = async (req, res, next) => {
   const { avatarURL, name, email, birthday, phone, city, _id: id } = req.user;
   const petList = await Pet.find({ owner: id });
 
-  res.json({
+  res.status(200).json({
     user: {
       name,
       avatarURL,

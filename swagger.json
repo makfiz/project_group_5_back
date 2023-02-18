@@ -1,0 +1,283 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Pet Support API",
+    "version": "v1"
+  },
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "servers": [
+    {
+      "url": "https://petssuport4815162342api.onrender.com/api"
+    },
+    {
+      "url": "http://localhost:3000/api"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Operations about user"
+    },
+    {
+      "name": "Pets"
+    },
+    {
+      "name": "News"
+    },
+    {
+      "name": "Notices"
+    },
+    {
+      "name": "Friends"
+    }
+  ],
+
+  "paths": {
+    "/users/signup": {
+      "post": {
+        "summary": "Create user",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "description": "Created user object",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/signupRequest" }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/definitions/emailResponses" }
+              }
+            }
+          },
+          "409": { "description": "Email in use" }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "summary": "Logs user into the system",
+        "tags": ["Users"],
+        "requestBody": {
+          "required": true,
+          "description": "object with email and password",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/loginRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "token": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "password/email is wrong or email is not verified"
+          }
+        }
+      }
+    },
+    "/users/me": {
+      "get": {
+        "summary": "Current User",
+        "tags": ["Users"],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/User" }
+              }
+            }
+          },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/users/update": {
+      "patch": {
+        "summary": "Update user",
+        "tags": ["Users"],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "description": "object with updated fields, all fields are optional",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/updateUserData" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/definitions/updateUserData" }
+              }
+            }
+          },
+          "400": { "description": "\"${}\" is not allowed" },
+          "401": { "description": "Not authorized or token invalid" }
+          
+        }
+      }
+    },
+    "/users/logout": {
+      "get": {
+        "summary": "Logs out current logged in user session",
+        "tags": ["Users"],
+        "security": [{ "Bearer": [] }],
+        "responses": {
+          "204": {
+            "description": "successful operation"
+          },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+  
+    "/users/{verificationToken}": {
+      "get": {
+        "summary": "Email verification by token",
+        "tags": ["Users"],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "parameters": [
+          {
+            "name": "verificationToken",
+            "in": "path",
+            "required": true,
+            "description": "User verificationToken",
+            "schema": {
+              "type": "string",
+              "example": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYzY2MxYzI5NDcyMzQ4Njc3OTViMjlhNCIsImlhdCI6MTY3NTAxNjc1NywiZXhwIjoxNjc1MDQ1NTU3fQ._Em1_v9Ii4xNN5DFfLu95g0Boe3ZBobaTV8Ao2wyLnc"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Verification successful" },
+          "404": { "description": "User not found" }
+        }
+      }
+    },
+    "/users/verify": {
+      "post": {
+        "summary": "Retry email verification",
+        "tags": ["Users"],
+        "consumes": ["application/json"],
+        "produces": ["application/json"],
+        "requestBody": {
+          "required": true,
+          "description": "object body with email",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/emailResponses" }
+            }
+          }
+        },
+        "responses": {
+          "200": { "description": "Verification email sent" },
+          "400": {
+            "description": "Request body missing required field email or Verification has already been passed"
+          },
+          "404": { "description": "User not found" }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "signupRequest": {
+      "type": "object",
+      "required":["name","email","password","city","phone"],
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "password": { "type": "string" },
+        "city": { "type": "string" },
+        "phone": { "type": "string" }
+      }
+    },
+    "loginRequest": {
+      "type": "object",
+      "required":["email","password"],
+      "properties": {
+        "email": { "type": "string", "format": "email" },
+        "password": { "type": "string" }
+      }
+    },
+    "emailResponses": {
+      "type": "object",
+      "required":["email"],
+      "properties": {
+        "email": { "type": "string", "format": "email" }
+      }
+    },
+    "updateUserData": {
+      "type": "object",
+      "description": "all fields are optional",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "city": { "type": "string" },
+        "phone": { "type": "string" },
+        "birthday": { "type": "string" }
+      }
+    }
+  },
+
+  "components": {
+    "schemas": {
+      "Pets":{
+        "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "birthday": { "type": "string" },
+        "breed": { "type": "string" },
+        "comments": { "type": "string" },
+        "owner": { "type": "string" },
+        "createdAt": { "type": "string", "format":"date" },
+        "updatedAt": { "type": "string", "format":"date"}
+      }
+    },
+      "User":{
+        "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "avatarURL": { "type": "string" },
+        "city": { "type": "string" },
+        "phone": { "type": "string" },
+        "birthday": { "type": "string" },
+        "pets": {
+          "type": "array",
+          "items": {  "$ref": "#/components/schemas/Pets" }  }
+      }
+      }
+    },
+    "securitySchemes": {
+      "Bearer": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}

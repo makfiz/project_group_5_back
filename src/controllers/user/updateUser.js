@@ -8,8 +8,7 @@ async function updateUser(req, res, next) {
   if (!result) {
     next(HttpError(404, "Not found"));
   }
-  res.json({
-    _id: result._id,
+  res.status(200).json({
     name: result.name,
     email: result.email,
     birthday: result.birthday,
