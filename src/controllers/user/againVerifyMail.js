@@ -23,7 +23,7 @@ const againVerifyMail = async (req, res) => {
   }
 
   await sendVerifyMail(email,verificationToken);
-  res.json({ message: "Verification email sent" });
+  res.status(200).json({ message: "Verification email sent" });
 };
 
 module.exports = againVerifyMail;
