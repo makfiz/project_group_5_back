@@ -9,17 +9,19 @@ const getAllNoticesByCategoryController = async (req, res, next) => {
 
 const getAllNoticesByCategoryPaginatedController = async (req, res, next) => {
   const { category } = req.params;
-  const { page = 1, limit = 20 } = req.query;
+  const { page = 1, limit = 20, search } = req.query;
   const pageLimit = +limit > 20 ? 20 : +limit;
   const skip = +limit * +page - +limit;
 
   const notices = await dbNotice
-    .find({ category })
+    .find({ category, title: { $regex: new RegExp(search, "i") } })
     .skip(skip)
     .limit(pageLimit)
     .sort({ updatedAt: -1 });
 
-  const totalCount = await dbNotice.find({ category }).count();
+  const totalCount = await dbNotice
+    .find({ category, title: { $regex: new RegExp(search, "i") } })
+    .count();
   const totalPages = Math.ceil(totalCount / limit);
 
   return res.status(200).json({ notices, page: +page, totalPages, totalCount });
