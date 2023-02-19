@@ -16,8 +16,7 @@
   ],
   "tags": [
     {
-      "name": "Users",
-      "description": "Operations about user"
+      "name": "Users"
     },
     {
       "name": "Pets"
@@ -134,9 +133,8 @@
               }
             }
           },
-          "400": { "description": "\"${}\" is not allowed" },
+          "400": { "description": "\"\" is not allowed" },
           "401": { "description": "Not authorized or token invalid" }
-          
         }
       }
     },
@@ -153,13 +151,10 @@
         }
       }
     },
-  
     "/users/{verificationToken}": {
       "get": {
         "summary": "Email verification by token",
         "tags": ["Users"],
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
         "parameters": [
           {
             "name": "verificationToken",
@@ -182,8 +177,6 @@
       "post": {
         "summary": "Retry email verification",
         "tags": ["Users"],
-        "consumes": ["application/json"],
-        "produces": ["application/json"],
         "requestBody": {
           "required": true,
           "description": "object body with email",
@@ -201,12 +194,424 @@
           "404": { "description": "User not found" }
         }
       }
+    },
+    "/friends": {
+      "get": {
+        "summary": "Our friends",
+        "tags": ["Friends"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Friends" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/news": {
+      "get": {
+        "summary": "Get news",
+        "tags": ["News"],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/News" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/pets": {
+      "post": {
+        "summary": "Create pet object",
+        "tags": ["Pets"],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "description": "Created pet object",
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/definitions/petRequest" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Pets" }
+              }
+            }
+          },
+          "400": { "description": "Unable to create new Pet" },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/pets/{petId}": {
+      "delete": {
+        "summary": "Delete pet by id",
+        "tags": ["Pets"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "description": "Pet id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Pet deleted" },
+          "404": { "description": "Pet not found" },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/notices/{category}": {
+      "get": {
+        "summary": "Notices by category",
+        "tags": ["Notices"],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "description": "selected category",
+            "schema": {
+              "type": "string",
+              "example": "sell"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notices" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notices/{category}/p": {
+      "get": {
+        "summary": "Notices by category and pagination",
+        "tags": ["Notices"],
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "description": "selected category",
+            "schema": {
+              "type": "string",
+              "example": "sell"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+
+            "description": "number of page",
+            "schema": {
+              "type": "string",
+              "example": "page=1"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+
+            "description": "number of items per page",
+            "schema": {
+              "type": "string",
+              "example": "limit=20"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notices" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notices/all/find": {
+      "get": {
+        "summary": "Notices by title",
+        "tags": ["Notices"],
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+
+            "description": "keyword search in titles",
+            "schema": {
+              "type": "string",
+              "example": "fat cat"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+
+            "description": "number of page",
+            "schema": {
+              "type": "string",
+              "example": "page=1"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+
+            "description": "number of items per page",
+            "schema": {
+              "type": "string",
+              "example": "limit=20"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notices" }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/notices/{noticeId}": {
+      "get": {
+        "summary": "Get notice by id",
+        "tags": ["Notices"],
+        "parameters": [
+          {
+            "name": "noticeId",
+            "in": "path",
+            "required": true,
+            "description": "notice id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notice" }
+              }
+            }
+          },
+          "404": { "description": "Notice not found" }
+        }
+      }
+    },
+    "/notices/{noticeId}/favorite": {
+      "post": {
+        "summary": "Add notice to favorite",
+        "tags": ["Notices"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "noticeId",
+            "in": "path",
+            "required": true,
+            "description": "notice id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notice" }
+              }
+            }
+          },
+          "400": { "description": "Already in favorites" },
+          "401": { "description": "Not authorized or token invalid" },
+          "404": { "description": "Notice not found" }
+        }
+      },
+      "delete": {
+        "summary": "Remove notice from favorites",
+        "tags": ["Notices"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "noticeId",
+            "in": "path",
+            "required": true,
+            "description": "notice id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notices" }
+              }
+            }
+          },
+          "401": { "description": "Not authorized or token invalid" },
+          "404": { "description": "Notice not found" }
+        }
+      }
+    },
+    "/notices/{userId}/favorite": {
+      "get": {
+        "summary": "Get user favorite notices",
+        "tags": ["Notices"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "user id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notices" }
+              }
+            }
+          },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/notices/{categoryName}": {
+      "post": {
+        "summary": "Create new notice by categoryName",
+        "tags": ["Notices"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "categoryName",
+            "in": "path",
+            "required": true,
+            "description": "selected category",
+            "schema": {
+              "type": "string",
+              "example": "sell"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notice" }
+              }
+            }
+          },
+          "400": { "description": "Creating error" },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/notices/own/{userId}": {
+      "get": {
+        "summary": "Get user notices",
+        "tags": ["Notices"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "userId",
+            "in": "path",
+            "required": true,
+            "description": "user id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notices" }
+              }
+            }
+          },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/notices/own/{noticeId}": {
+      "delete": {
+        "summary": "Delete selected notice",
+        "tags": ["Notices"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "noticeId",
+            "in": "path",
+            "required": true,
+            "description": "notices id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "responses": {
+          "200": { "description": "Notice deleted" },
+          "401": { "description": "Not authorized or token invalid" },
+          "403": { "description": "Forbidden" },
+          "404": { "description": "Not found notice by this id" }
+        }
+      }
     }
   },
   "definitions": {
     "signupRequest": {
       "type": "object",
-      "required":["name","email","password","city","phone"],
+      "required": ["name", "email", "password", "city", "phone"],
       "properties": {
         "name": { "type": "string" },
         "email": { "type": "string", "format": "email" },
@@ -217,7 +622,7 @@
     },
     "loginRequest": {
       "type": "object",
-      "required":["email","password"],
+      "required": ["email", "password"],
       "properties": {
         "email": { "type": "string", "format": "email" },
         "password": { "type": "string" }
@@ -225,7 +630,7 @@
     },
     "emailResponses": {
       "type": "object",
-      "required":["email"],
+      "required": ["email"],
       "properties": {
         "email": { "type": "string", "format": "email" }
       }
@@ -240,36 +645,116 @@
         "phone": { "type": "string" },
         "birthday": { "type": "string" }
       }
+    },
+    "petRequest": {
+      "type": "object",
+      "required": ["name", "breed"],
+      "properties": {
+        "name": { "type": "string" },
+        "birthday": { "type": "string" },
+        "breed": { "type": "string" },
+        "comments": { "type": "string" }
+      }
     }
   },
 
   "components": {
     "schemas": {
-      "Pets":{
+      "Pets": {
         "type": "object",
-      "properties": {
-        "name": { "type": "string" },
-        "birthday": { "type": "string" },
-        "breed": { "type": "string" },
-        "comments": { "type": "string" },
-        "owner": { "type": "string" },
-        "createdAt": { "type": "string", "format":"date" },
-        "updatedAt": { "type": "string", "format":"date"}
-      }
-    },
-      "User":{
+        "properties": {
+          "name": { "type": "string" },
+          "birthday": { "type": "string" },
+          "breed": { "type": "string" },
+          "comments": { "type": "string" },
+          "owner": { "type": "string" },
+          "photoURL": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date" },
+          "updatedAt": { "type": "string", "format": "date" }
+        }
+      },
+      "User": {
         "type": "object",
-      "properties": {
-        "name": { "type": "string" },
-        "email": { "type": "string", "format": "email" },
-        "avatarURL": { "type": "string" },
-        "city": { "type": "string" },
-        "phone": { "type": "string" },
-        "birthday": { "type": "string" },
-        "pets": {
-          "type": "array",
-          "items": {  "$ref": "#/components/schemas/Pets" }  }
-      }
+        "properties": {
+          "name": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "avatarURL": { "type": "string" },
+          "city": { "type": "string" },
+          "phone": { "type": "string" },
+          "birthday": { "type": "string" },
+          "pets": {
+            "type": "array",
+            "items": { "$ref": "#/components/schemas/Pets" }
+          }
+        }
+      },
+      "Friends": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "title": { "type": "string" },
+            "url": { "type": "string" },
+            "addressUrl": { "type": "string" },
+            "imageUrl": { "type": "string" },
+            "address": { "type": "string" },
+            "phone": { "type": "string" },
+            "email": { "type": "string", "format": "email" },
+            "workDays": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "_id": { "type": "string" },
+                  "isOpen": { "type": "boolean" },
+                  "from": { "type": "string" },
+                  "to": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "News": {
+        "type": "array",
+        "items": {
+          "type": "object",
+          "properties": {
+            "_id": { "type": "string" },
+            "title": { "type": "string" },
+            "url": { "type": "string" },
+            "description": { "type": "string" },
+            "date": { "type": "string" }
+          }
+        }
+      },
+      "Notices": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/Notice"
+        }
+      },
+      "Notice": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "category": { "type": "string" },
+          "title": { "type": "string" },
+          "name": { "type": "string" },
+          "breed": { "type": "string" },
+          "sex": { "type": "string" },
+          "location": { "type": "string" },
+          "price": { "type": "string" },
+          "photoURL": { "type": "string" },
+          "comments": { "type": "string" },
+          "owner": { "type": "string" },
+          "favoritesIn": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
       }
     },
     "securitySchemes": {
