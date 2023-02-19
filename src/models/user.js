@@ -24,11 +24,13 @@ const schema = mongoose.Schema(
     },
     city: {
       type: String,
-      required: [true, "City/Region is required"],
+      // required: [true, "City/Region is required"],
+      default: "",
     },
     phone: {
       type: String,
-      required: [true, "Mobile phone is required"],
+      // required: [true, "Mobile phone is required"],
+      default: "",
     },
     birthday: {
       type: String,

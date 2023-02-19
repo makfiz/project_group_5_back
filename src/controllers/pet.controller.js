@@ -1,6 +1,6 @@
 const { Pet } = require('../models/pet');
 const { HttpError } = require('../helpers/httpError');
-// const { dbUsers } = require('../models/user');
+// const { dbUsers } = require("../models/user");
 
 const addUserPet = async (req, res) => {
   const owner = req.user.id;
@@ -25,7 +25,7 @@ const deleteUserPet = async (req, res) => {
     throw new HttpError(404, `Pet not found`);
   }
 
-  res.json({
+  res.status(200).json({
     message: `pet deleted`,
   });
 };
