@@ -4,7 +4,7 @@ const { dbNotice } = require("../models/notice");
 const getAllNoticesByCategoryController = async (req, res, next) => {
   const { category } = req.params;
   const notices = await dbNotice.find({ category });
-  return res.status(200).json(notices);
+  return res.status(200).json({ notices });
 };
 
 const getAllNoticesByCategoryPaginatedController = async (req, res, next) => {
@@ -18,7 +18,11 @@ const getAllNoticesByCategoryPaginatedController = async (req, res, next) => {
     .skip(skip)
     .limit(pageLimit)
     .sort({ updatedAt: -1 });
-  return res.status(200).json({ notices });
+
+  const totalCount = await dbNotice.find({ category }).count();
+  const totalPages = Math.ceil(totalCount / limit);
+
+  return res.status(200).json({ notices, page: +page, totalPages, totalCount });
 };
 
 const getAllNoticesBySearchController = async (req, res, next) => {
