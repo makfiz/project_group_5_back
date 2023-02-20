@@ -41,7 +41,7 @@ routerNotices.get(
   tryCatchWrapper(getAllNoticesBySearchController)
 );
 // створити ендпоінт для отримання одного оголошення
-routerNotices.get("/:noticeId", tryCatchWrapper(getOneNoticeByIdController));
+routerNotices.get("/id/:noticeId", tryCatchWrapper(getOneNoticeByIdController));
 // Restricted routes
 routerNotices.use(authIdent);
 // створити ендпоінт для додавання оголошення до обраних
