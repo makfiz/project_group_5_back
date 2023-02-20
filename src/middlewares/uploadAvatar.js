@@ -4,7 +4,7 @@
 
 const multer = require("multer");
 const cloudinary = require("cloudinary").v2;
-const { CloudinaryStorage } = require("multer-storage-cloudinary");
+const { HttpError } = require(".././helpers/httpError");
 
 const { CLOUDINARY_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
   process.env;
@@ -15,17 +15,33 @@ cloudinary.config({
   api_secret: CLOUDINARY_API_SECRET,
 });
 
-const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  folder: "avatar",
-  allowedFormats: ["jpg", "png"],
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
-  },
+const memoryStorage = multer.memoryStorage();
+
+const upload = multer({
+  storage: memoryStorage,
 });
 
-const uploadAvatar = multer({ storage });
+const uploadToCloudinary = async (fileString, format) => {
+  try {
+    const { uploader } = cloudinary;
+
+    const res = await uploader.upload(
+      `data:avatarURL/${format};base64,${fileString}`,
+      {
+        transformation: [
+          { quality: "auto", crop: "scale" },
+          { fetch_format: "auto" },
+        ],
+      }
+    );
+
+    return res;
+  } catch (error) {
+    throw new HttpError(500, error);
+  }
+};
 
 module.exports = {
-  uploadAvatar,
+  upload,
+  uploadToCloudinary,
 };

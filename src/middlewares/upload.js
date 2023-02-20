@@ -1,19 +1,10 @@
-const multer = require("multer");
-const path = require("path");
+const DatauriParser = require("datauri/parser");
 
-const tmpPath = path.join(__dirname, "../", "tmp");
+const parser = new DatauriParser();
 
-const multerConfig = multer.diskStorage({
-	destination: (req, file, cb)=> {
-		cb(null, tmpPath)
-	},
-	filename: (req, file, cb)=> {
-		cb(null, file.originalname)
-	}
-})
+const bufferToDataURI = (fileFormat, buffer) =>
+  parser.format(fileFormat, buffer);
 
-const upload = multer({
-	storage: multerConfig,
-})
-
-module.exports = upload;
+module.exports = {
+  bufferToDataURI,
+};
