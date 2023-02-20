@@ -18,7 +18,7 @@ const notice = new Schema(
       minLength: 2,
       maxLength: 16,
     },
-    bitrh: {
+    birth: {
       type: String,
     },
     breed: {
