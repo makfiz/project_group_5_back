@@ -104,7 +104,7 @@ const deleteNoticeFromFavoriteController = async (req, res, next) => {
   }
 
   const { favoritesIn } = askedNotice;
-  const updatedNotice = await dbNotice.findByIdAndUpdate(
+  const notice = await dbNotice.findByIdAndUpdate(
     noticeId,
     {
       favoritesIn: favoritesIn.filter(
@@ -117,7 +117,7 @@ const deleteNoticeFromFavoriteController = async (req, res, next) => {
     }
   );
 
-  return res.status(200).json({ updatedNotice });
+  return res.status(200).json({ notice });
 };
 
 const addNoticeByCategoryController = async (req, res, next) => {
