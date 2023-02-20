@@ -11,11 +11,13 @@ const {
   againVerifyMail,
   getCurrentUser,
   updateUser,
+  editAvatar,
+  editPassword,
 } = require("../../controllers/user");
 
 const { tryCatchWrapper } = require("../../helpers");
 const authIdent = require("../../middlewares/authIdent");
-// const upload = require("../../middlewares/upload");
+const { upload } = require("../../middlewares/uploadAvatar");
 const validateBody = require("../../middlewares/validateBody");
 
 authRouter.post(
@@ -33,10 +35,22 @@ authRouter.post(
 authRouter.get("/logout", authIdent, tryCatchWrapper(logoutUser));
 authRouter.get("/me", authIdent, tryCatchWrapper(getCurrentUser));
 authRouter.patch(
+  "/upload",
+  authIdent,
+  upload.single("avatar"),
+  tryCatchWrapper(editAvatar)
+);
+authRouter.patch(
   "/update",
   authIdent,
   validateBody(joiSchemaUser.update),
   tryCatchWrapper(updateUser)
+);
+authRouter.patch(
+  "/change",
+  authIdent,
+  validateBody(joiSchemaUser.restore),
+  tryCatchWrapper(editAvatar)
 );
 
 module.exports = {
