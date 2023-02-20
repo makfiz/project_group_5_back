@@ -15,7 +15,7 @@ const schema = mongoose.Schema(
     },
     password: {
       type: String,
-      minlength: 6,
+      minlength: 7,
       required: [true, "Password is required"],
     },
     name: {
@@ -24,11 +24,13 @@ const schema = mongoose.Schema(
     },
     city: {
       type: String,
-      required: [true, "City/Region is required"],
+      // required: [true, "City/Region is required"],
+      default: "",
     },
     phone: {
       type: String,
-      required: [true, "Mobile phone is required"],
+      // required: [true, "Mobile phone is required"],
+      default: "",
     },
     birthday: {
       type: String,

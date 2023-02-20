@@ -13,11 +13,16 @@ const {
   updateUser,
   editAvatar,
   editPassword,
+  googleAuthUser
 } = require("../../controllers/user");
 
 const { tryCatchWrapper } = require("../../helpers");
 const authIdent = require("../../middlewares/authIdent");
+
 const { upload } = require("../../middlewares/uploadAvatar");
+
+const passport = require("../../middlewares/authUserGoogle");
+
 const validateBody = require("../../middlewares/validateBody");
 
 authRouter.post(
@@ -25,6 +30,8 @@ authRouter.post(
   validateBody(joiSchemaUser.register),
   tryCatchWrapper(registerUser)
 );
+authRouter.get("/google", passport.authenticate("google", { scope: ["email", "profile"] }));
+authRouter.get("/google/callback", passport.authenticate("google", {session: false}), tryCatchWrapper(googleAuthUser));
 authRouter.get("/verify/:verificationToken", tryCatchWrapper(verifyMail));
 authRouter.post("/verify", tryCatchWrapper(againVerifyMail));
 authRouter.post(

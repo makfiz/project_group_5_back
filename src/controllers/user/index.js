@@ -4,7 +4,10 @@ const logoutUser = require("./logoutUser");
 const verifyMail = require("./verifyMail");
 const againVerifyMail = require("./againVerifyMail");
 const getCurrentUser = require("./getCurrentUser");
+
 const { updateUser, editAvatar, editPassword } = require("./updateUser");
+const googleAuthUser = require("./googleAuthUser");
+
 
 module.exports = {
   registerUser,
@@ -16,4 +19,5 @@ module.exports = {
   updateUser,
   editAvatar,
   editPassword,
+  googleAuthUser,
 };
