@@ -37,7 +37,7 @@ const notice = new Schema(
     },
     price: {
       type: String,
-      required: [true, "Price is required"],
+      // required: [true, "Price is required"],
     },
     photoURL: {
       type: String,

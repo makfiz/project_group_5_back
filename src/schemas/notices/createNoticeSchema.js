@@ -11,7 +11,8 @@ const createNoticeSchema = Joi.object({
   sex: Joi.string().valid("male", "female").required(),
   location: Joi.string().required(),
 
-  price: Joi.string().required(),
+  // price: Joi.string().required(),
+  price: Joi.string(),
   photoURL: Joi.string(),
   comments: Joi.string().min(8).max(120),
   favoritesIn: Joi.array().items(Joi.string),
