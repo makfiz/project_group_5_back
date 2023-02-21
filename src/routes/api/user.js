@@ -57,7 +57,7 @@ authRouter.patch(
   "/change",
   authIdent,
   validateBody(joiSchemaUser.restore),
-  tryCatchWrapper(editAvatar)
+  tryCatchWrapper(editPassword)
 );
 
 module.exports = {
