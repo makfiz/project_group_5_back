@@ -8,10 +8,9 @@ async function getNews(req, res, next) {
         if (!search) {
             return res.status(200).json(news)
         } else {
-            const filtred = news.filter(e => e.description.includes(search));
+            const filtred = news.filter(e => e.title.includes(search));
             return res.status(200).json(filtred);
         }
-
     } 
 
     module.exports = {
