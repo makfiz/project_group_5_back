@@ -79,13 +79,17 @@ const addNoticeToFavoriteController = async (req, res, next) => {
 };
 
 const getFavoriteNoticesController = async (req, res, next) => {
+  const { search } = req.query;
   const { _id } = req.user;
 
   if (!_id) {
     return next(createError(401, "Unathorized"));
   }
 
-  const notices = await dbNotice.find({ favoritesIn: _id });
+  const notices = await dbNotice.find({
+    favoritesIn: _id,
+    title: { $regex: new RegExp(search, "i") },
+  });
 
   return res.status(200).json({ notices });
 };
@@ -134,13 +138,17 @@ const addNoticeByCategoryController = async (req, res, next) => {
 };
 
 const getOwnNoticesController = async (req, res, next) => {
+  const { search } = req.query;
   const { _id } = req.user;
 
   if (!_id) {
     return next(createError(401, "Unathorized"));
   }
 
-  const notices = await dbNotice.find({ owner: _id });
+  const notices = await dbNotice.find({
+    owner: _id,
+    title: { $regex: new RegExp(search, "i") },
+  });
 
   return res.status(200).json({ notices });
 };
@@ -157,18 +165,17 @@ const deleteOwnNoticeController = async (req, res, next) => {
   const notice = await dbNotice.findById(noticeId);
 
   if (!notice) {
-    return next(createError(404, `Not found notice by id: ${contactId}`));
+    return next(createError(404, `Not found notice by id: ${noticeId}`));
   }
 
   const ownerIdString = notice.owner.toString();
 
-  if (ownerIdString !== _id) {
+  if (ownerIdString !== _id.toString()) {
     return next(createError(403, "Forbidden"));
   }
 
   await dbNotice.findByIdAndRemove(noticeId);
-
-  return res.status(200).json({ message: "Notice deleted" });
+  return res.status(200).json({ message: "Notice  deleted", noticeId });
 };
 
 module.exports = {
