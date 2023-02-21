@@ -11,7 +11,7 @@ const googleAuthUser = async (req, res) => {
 	const token = jwt.sign(payload, SECRET_KEY, { expiresIn: "24h" }); // генерування токена
     await dbUsers.findByIdAndUpdate(id, { token });
     
-    res.redirect(`${FRONTEND_URL}/api/users/login?token=${token}&email=${email}&id=${id}`);
+    res.redirect(`${FRONTEND_URL}?token=${token}&email=${email}&id=${id}`);
 }
 
 module.exports = googleAuthUser;
