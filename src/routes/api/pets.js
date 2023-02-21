@@ -9,6 +9,7 @@ const { tryCatchWrapper } = require("../../helpers");
 const {
   deleteUserPet,
   addUserPet,
+  uploadPetImage
 } = require("../../controllers/pet.controller");
 
 petRouter.use(authIdent);
@@ -21,6 +22,13 @@ petRouter.post(
   tryCatchWrapper(addUserPet)
 );
 petRouter.delete("/:petId", tryCatchWrapper(deleteUserPet));
+
+petRouter.patch(
+  "/:petId/upload",
+  authIdent,
+  upload.single("avatar"),
+  tryCatchWrapper(uploadPetImage)
+);
 
 module.exports = {
   petRouter,
