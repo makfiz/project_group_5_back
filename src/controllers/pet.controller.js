@@ -1,20 +1,25 @@
 const { Pet } = require('../models/pet');
 const { HttpError } = require('../helpers/httpError');
-// const { dbUsers } = require("../models/user");
+const { uploadToCloudinary } = require("../middlewares/uploadAvatar");
+const { bufferToDataURI } = require("../middlewares/upload");
 
-const addUserPet = async (req, res) => {
-  const owner = req.user.id;
-  const petData = req.body;
-  const data = req.file
-    ? { petImage: req.file.path, owner, ...petData }
-    : { owner, ...petData };
+const addUserPet = async (req, res, next) => {
+    const owner = req.user.id;
+    const { file } = req;
 
-  const newMyPet = await Pet.create(data);
-  if (!newMyPet) {
-    throw new HttpError(400, `Unable to create new Pet`);
-  }
+    if (!file) {
+      throw new HttpError(400, 'Missing required fields. Provide necessary data.');
+    }
 
-  res.status(201).json(newMyPet);
+    const fileFormat = file.mimetype.split("/")[1];
+    const { base64 } = bufferToDataURI(fileFormat, file.buffer);
+
+    const imageDetails = await uploadToCloudinary(base64, fileFormat);
+    petImage = imageDetails.url;
+    const myNewPet = await Pet.create(owner, req.body, petImage);
+    
+    return res.status(201).json({ status: 'success', myNewPet });
+   
 };
 
 const deleteUserPet = async (req, res) => {
@@ -30,7 +35,30 @@ const deleteUserPet = async (req, res) => {
   });
 };
 
+const uploadPetImage = async (req, res, next) => {
+  const { file } = req;
+
+  const { petId } = req.params;
+  if (!file) throw new HttpError(400, "Image is required");
+  
+  const fileFormat = file.mimetype.split("/")[1];
+  const { base64 } = bufferToDataURI(fileFormat, file.buffer);
+
+  const imageDetails = await uploadToCloudinary(base64, fileFormat);
+
+  const updatePet = await Pet.findById(petId, req.body);
+  updatePet.petImage = imageDetails.url;
+  await updatePet.save();
+
+  return res.json(
+    { status: "success",
+      petImage: updatePet.petImage }
+  )
+}
+  
+
 module.exports = {
   addUserPet,
   deleteUserPet,
+  uploadPetImage,
 };
