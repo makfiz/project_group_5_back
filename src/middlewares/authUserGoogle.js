@@ -9,7 +9,7 @@ const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_LOCALHOST, BASE_URL } =
 const googleParams = {
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
-    callbakcURL: `${BASE_URL_LOCALHOST}/api/users/google/callback`,
+    callbackURL: `${BASE_URL}/api/users/google/callback`,
     passReqToCallback: true,
 };
 
