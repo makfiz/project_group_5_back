@@ -51,7 +51,7 @@ routerNotices.post(
 );
 // створити ендпоінт для отримання оголошень авторизованого користувача доданих ним же в обрані
 routerNotices.get(
-  "/:userId/favorite",
+  "/user/:userId/favorite",
   tryCatchWrapper(getFavoriteNoticesController)
 );
 // створити ендпоінт для видалення оголошення авторизованого користувача доданих цим же до обраних
@@ -66,7 +66,10 @@ routerNotices.post(
   tryCatchWrapper(addNoticeByCategoryController)
 );
 // створити ендпоінт для отримання оголошень авторизованого кристувача створених цим же користувачем
-routerNotices.get("/own/:userId", tryCatchWrapper(getOwnNoticesController));
+routerNotices.get(
+  "/own/user/:userId",
+  tryCatchWrapper(getOwnNoticesController)
+);
 // створити ендпоінт для видалення оголошення авторизованого користувача створеного цим же користувачем
 routerNotices.delete(
   "/own/:noticeId",

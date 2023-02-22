@@ -18,7 +18,7 @@ const notice = new Schema(
       minLength: 2,
       maxLength: 16,
     },
-    bitrh: {
+    birth: {
       type: String,
     },
     breed: {
@@ -37,7 +37,7 @@ const notice = new Schema(
     },
     price: {
       type: String,
-      required: [true, "Price is required"],
+      // required: [true, "Price is required"],
     },
     photoURL: {
       type: String,

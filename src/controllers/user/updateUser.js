@@ -13,7 +13,12 @@ async function updateUser(req, res, next) {
 
   const result = await dbUsers.findByIdAndUpdate(_id, req.body, { new: true });
 
-  res.json({
+
+  
+  if (!result) {
+    next(HttpError(404, "Not found"));
+  }
+  res.status(200).json({
     _id: result._id,
     name: result.name,
     email: result.email,

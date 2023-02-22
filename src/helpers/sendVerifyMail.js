@@ -2,9 +2,10 @@ const nodemailer = require("nodemailer");
 
 // require("dotenv").config();
 
-const { FROM_EMAIL, MAILTRAP_PASS, MAILTRAP_USER } = process.env;
+const { FROM_EMAIL, MAILTRAP_PASS, MAILTRAP_USER, PETLY_EMAIL, PETLY_PASSWORD, BASE_URL } = process.env;
 
 const sendVerifyMail = async (toEmail, verificationId) => {
+
   try {
     const email = {
       from: FROM_EMAIL,
