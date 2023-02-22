@@ -1,6 +1,6 @@
 const { dbUsers } = require("../../models/user");
 const { HttpError } = require("../../helpers/httpError");
-const sendVerifyMail = require("../../helpers/sendVerifyMail");
+const { sendVerifyMail } = require("../../helpers/sendVerifyMail");
 
 const againVerifyMail = async (req, res) => {
   const { email } = req.body;
