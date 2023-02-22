@@ -26,6 +26,7 @@ const registerUser = async (req, res) => {
   }); // створення нового user в базі
   res.status(201).json({
     email: result.email,
+    id: result._id,
   });
 };
 
