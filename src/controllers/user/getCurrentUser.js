@@ -9,6 +9,7 @@ const getCurrentUser = async (req, res, next) => {
 
   res.status(200).json({
     user: {
+      _id
       name,
       avatarURL,
       email,
