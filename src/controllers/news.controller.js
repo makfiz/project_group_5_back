@@ -3,8 +3,8 @@ const { dbNews } = require('../models/news');
 
 async function getNews(req, res, next) {
     const { search } = req.query;
-    console.log("search", search);
-    const news = await dbNews.find();
+    
+    const news = await dbNews.find().sort({ date: -1 });
         if (!search) {
             return res.status(200).json(news)
         } else {
