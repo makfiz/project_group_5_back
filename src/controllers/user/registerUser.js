@@ -11,8 +11,8 @@ const registerUser = async (req, res) => {
     throw new HttpError(409, `Email ${email} in use`);
   }
 
-  const verificationToken = v4();
-  await sendVerifyMail(email, verificationToken);
+  // const verificationToken = v4(); для прода - раскоментить
+  // await sendVerifyMail(email, verificationToken); для прода - раскоментить
 
   const hashPassword = await bcrypt.hash(password, 10); // хешування пароля
   const result = await dbUsers.create({
@@ -21,8 +21,8 @@ const registerUser = async (req, res) => {
     name,
     city,
     phone,
-    verify: false,
-    verificationToken,
+    verify: true, // для прода - verify: false,
+    verificationToken: "",  // для прода - verificationToken,
   }); // створення нового user в базі
   res.status(201).json({
     email: result.email,
