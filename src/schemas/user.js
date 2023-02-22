@@ -28,8 +28,13 @@ const userUpdateSchema = Joi.object({
   city: Joi.string(),
 });
 
+const updatePasswordSchema = Joi.object({
+  password: Joi.string().required(),
+  newPassword: Joi.string().required(),
+});
+
 const restorePasswordSchema = Joi.object({
-  email: Joi.string().required(),
+  email: Joi.string().email().required(),
 });
 
 const joiSchemaUser = {
@@ -37,6 +42,7 @@ const joiSchemaUser = {
   login: loginSchema,
   update: userUpdateSchema,
   restore: restorePasswordSchema,
+  updatePass: updatePasswordSchema,
 };
 
 module.exports = {

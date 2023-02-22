@@ -12,7 +12,8 @@ const {
   getCurrentUser,
   updateUser,
   editAvatar,
-  editPassword,
+  restorePassword,
+  updatePassword,
   googleAuthUser
 } = require("../../controllers/user");
 
@@ -54,10 +55,16 @@ authRouter.patch(
   tryCatchWrapper(updateUser)
 );
 authRouter.patch(
-  "/change",
+  "/user",
   authIdent,
+  validateBody(joiSchemaUser.updatePass),
+  tryCatchWrapper(updatePassword)
+);
+
+authRouter.patch(
+  "/restore",
   validateBody(joiSchemaUser.restore),
-  tryCatchWrapper(editPassword)
+  tryCatchWrapper(restorePassword)
 );
 
 module.exports = {
