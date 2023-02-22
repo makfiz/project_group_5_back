@@ -12,7 +12,8 @@ const {
   getCurrentUser,
   updateUser,
   editAvatar,
-  editPassword,
+  restorePassword,
+  updatePassword,
 } = require("../../controllers/user");
 
 const { tryCatchWrapper } = require("../../helpers");
@@ -47,10 +48,16 @@ authRouter.patch(
   tryCatchWrapper(updateUser)
 );
 authRouter.patch(
-  "/change",
+  "/user",
   authIdent,
+  validateBody(joiSchemaUser.updatePass),
+  tryCatchWrapper(updatePassword)
+);
+
+authRouter.patch(
+  "/restore",
   validateBody(joiSchemaUser.restore),
-  tryCatchWrapper(editAvatar)
+  tryCatchWrapper(restorePassword)
 );
 
 module.exports = {

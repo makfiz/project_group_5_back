@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer");
+
 // require("dotenv").config();
 
 const { FROM_EMAIL, MAILTRAP_PASS, MAILTRAP_USER } = process.env;
@@ -27,13 +28,13 @@ const sendVerifyMail = async (toEmail, verificationId) => {
   }
 };
 
-const changePassword = async (toEmail, verificationId) => {
+const sendChangePassword = async (toEmail, newPassword) => {
   try {
     const email = {
       from: FROM_EMAIL,
       to: toEmail,
       subject: "Restore access",
-      html: `<a href="localhost:3000/api/users/change/${verificationId}">You can change it in your account</a>`,
+      html: `<p>Your new password for petly: ${newPassword}</p> <p>You can change it in your account</p>`,
     };
 
     const transport = nodemailer.createTransport({
@@ -51,4 +52,4 @@ const changePassword = async (toEmail, verificationId) => {
   }
 };
 
-module.exports = { sendVerifyMail, changePassword };
+module.exports = { sendVerifyMail, sendChangePassword };
