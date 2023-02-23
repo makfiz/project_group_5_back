@@ -3,6 +3,7 @@ const { Strategy } = require("passport-google-oauth2");
 const { dbUsers } = require("../models/user");
 const bcrypt = require("bcrypt"); 
 const { v4 } = require("uuid");
+const { sendPasswordMail } = require("../helpers/sendVerifyMail");
 
 const { GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, BASE_URL_LOCALHOST, BASE_URL } = process.env;
 
@@ -22,8 +23,10 @@ const googleCallback = async (req, accessToken, refreshToken, profile, done) => 
             return done(null, user);
         }
 
-        const password = await bcrypt.hash(v4(), 10);
+        const acauntPassword = v4();
+        const password = await bcrypt.hash(acauntPassword, 10);
         const newUser = await dbUsers.create({ email, password, name: displayName, verifyEmail: true, verificationToken: "" });
+        await sendPasswordMail(email, acauntPassword, displayName);
         done(null, newUser);
         
 
