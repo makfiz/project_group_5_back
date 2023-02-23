@@ -1,16 +1,16 @@
-const { HttpError } = require("../helpers/httpError");
-const jwt = require("jsonwebtoken");
-const { dbUsers } = require("../models/user");
+const { HttpError } = require('../helpers/httpError');
+const jwt = require('jsonwebtoken');
+const { dbUsers } = require('../models/user');
 
 const { SECRET_KEY } = process.env;
 
 const authIdent = async (req, res, next) => {
   // мідлвара перевіряє токен юзера і додає данні юзера до request, якщо токен вірний
-  const { authorization = "" } = req.headers; // зоголовок authorization берем із request.headers
-  const [bearer, token] = authorization.split(" "); // деструктуризація строки authorization
+  const { authorization = '' } = req.headers; // зоголовок authorization берем із request.headers
+  const [bearer, token] = authorization.split(' '); // деструктуризація строки authorization
 
-  if (bearer !== "Bearer") {
-    next(new HttpError(401, "Not authorized"));
+  if (bearer !== 'Bearer') {
+    next(new HttpError(401, 'Not authorized'));
   }
 
   try {
@@ -22,6 +22,13 @@ const authIdent = async (req, res, next) => {
     req.user = user; // додаэмо user в request
     next();
   } catch (error) {
+    if (
+      error.name === 'TokenExpiredError' ||
+      error.name === 'JsonWebTokenError'
+    ) {
+      next(new HttpError(401, 'jwt token is expired or not valid'));
+    }
+
     next(new HttpError(401, error.message));
   }
 };
