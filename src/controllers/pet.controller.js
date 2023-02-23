@@ -24,7 +24,6 @@ const deleteUserPet = async (req, res) => {
 
 const uploadPetImage = async (req, res, next) => {
   const { file } = req;
-  console.log(file);
   const { petId } = req.params;
   if (!file) throw new HttpError(400, 'Image is required');
 
