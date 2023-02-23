@@ -21,7 +21,7 @@ const registerUser = async (req, res) => {
     name,
     city,
     phone,
-    verify: true, // для прода - verify: false,
+    verifyEmail: true, // для прода - verify: false,
     verificationToken: "",  // для прода - verificationToken,
   }); // створення нового user в базі
   res.status(201).json({
