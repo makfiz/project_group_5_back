@@ -1,29 +1,29 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
-const petSchema = Schema(
+const petSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, "Name is required."],
+      required: [true, 'Name is required.'],
     },
     dateOfBirth: {
       type: String,
-      required: [true, "Date of birth is required."],
+      required: [true, 'Date of birth is required.'],
     },
     breed: {
       type: String,
-      required: [true, "Breed is required."],
+      required: [true, 'Breed is required.'],
     },
     comments: {
       type: String,
-      required: [true, "Comments is required."],
+      required: [true, 'Comments is required.'],
     },
     petImage: {
       type: String,
     },
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "user",
+      ref: 'user',
     },
   },
   {
@@ -32,7 +32,7 @@ const petSchema = Schema(
   }
 );
 
-const Pet = model("pet", petSchema);
+const Pet = model('pets', petSchema);
 
 module.exports = {
   Pet,
