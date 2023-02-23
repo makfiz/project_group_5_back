@@ -79,6 +79,31 @@ const sendVerifyMail = async (toEmail, verificationId) => {
   }
 };
 
+const sendPasswordMail = async (toEmail, password, name) => {
+  try {
+    const email = {
+      from: PETLY_EMAIL,
+      to: toEmail,
+      subject: "Password verification",
+      html: `<h1>Hello ${name}! It is a password to your acaunt in https://petssuport4815162342api.onrender.com - ${password}</h1>`,
+    };
+
+    const transport = nodemailer.createTransport({
+      host: 'smtp.meta.ua',
+      port: 465,
+      secure: true,
+      auth: {
+        user: PETLY_EMAIL,
+        pass: PETLY_PASSWORD,
+      },
+    });
+
+    await transport.sendMail(email);
+  } catch (error) {
+    console.error("app error:", error);
+  }
+};
+
 const sendChangePassword = async (toEmail, newPassword) => {
   try {
     const email = {
@@ -104,4 +129,4 @@ const sendChangePassword = async (toEmail, newPassword) => {
   }
 };
 
-module.exports = { sendVerifyMail, sendChangePassword };
+module.exports = { sendVerifyMail, sendChangePassword, sendPasswordMail };
