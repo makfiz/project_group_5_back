@@ -54,13 +54,13 @@ const { FROM_EMAIL, MAILTRAP_PASS, MAILTRAP_USER, PETLY_EMAIL, PETLY_PASSWORD, B
   
   
           //Для прода
-const sendVerifyMail = async (toEmail, verificationId) => {
+const sendVerifyMail = async (toEmail, verificationId, name) => {
   try {
     const email = {
       from: PETLY_EMAIL,
       to: toEmail,
       subject: "E-mail verification",
-      html: `<a href="${BASE_URL}/api/users/verify/${verificationId}">Please confirm your e-mail</a>`,
+      html: `<h1>Hello ${name}!</h1> <a href="${BASE_URL}/api/users/verify/${verificationId}">Please confirm your e-mail</a>`,
     };
 
     const transport = nodemailer.createTransport({
@@ -85,7 +85,7 @@ const sendPasswordMail = async (toEmail, password, name) => {
       from: PETLY_EMAIL,
       to: toEmail,
       subject: "Password verification",
-      html: `<h1>Hello ${name}! It is a password to your acaunt in https://petssuport4815162342api.onrender.com - ${password}</h1>`,
+      html: `<h1>Hello ${name}! It is a password and login to your acaunt in https://petssuport4815162342api.onrender.com</h1> <p>password - ${password}</p> <p>login - ${toEmail}</p>`,
     };
 
     const transport = nodemailer.createTransport({
