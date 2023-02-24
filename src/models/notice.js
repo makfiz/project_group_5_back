@@ -41,6 +41,7 @@ const notice = new Schema(
     },
     photoURL: {
       type: String,
+      default: "",
     },
     comments: {
       type: String,
