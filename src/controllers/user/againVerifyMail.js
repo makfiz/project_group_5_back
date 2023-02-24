@@ -17,12 +17,12 @@ const againVerifyMail = async (req, res) => {
     throw new HttpError(404, error.message);
   };
 
-  const { verifyEmail, verificationToken } = user;
+  const { verifyEmail, verificationToken, name } = user;
   if (verifyEmail) {
     throw new HttpError(400, "Verification has already been passed");
   }
 
-  await sendVerifyMail(email,verificationToken);
+  await sendVerifyMail(email, verificationToken, name);
   res.status(200).json({ message: "Verification email sent" });
 };
 
