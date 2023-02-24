@@ -18,6 +18,7 @@ const deleteUserPet = async (req, res) => {
   }
 
   res.status(200).json({
+    _id: petId,
     message: `pet deleted`,
   });
 };
