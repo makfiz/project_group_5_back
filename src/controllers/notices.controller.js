@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const { dbNotice } = require("../models/notice");
+const { dbUsers } = require("../models/user");
 
 const getAllNoticesByCategoryController = async (req, res, next) => {
   const { category } = req.params;
@@ -42,11 +43,19 @@ const getAllNoticesBySearchController = async (req, res, next) => {
 
 const getOneNoticeByIdController = async (req, res, next) => {
   const { noticeId } = req.params;
+
   const notice = await dbNotice.findById(noticeId);
   if (!notice) {
     return next(createError(404, "Notfound"));
   }
-  return res.status(200).json({ notice });
+
+  const contacts = await dbUsers.findById(notice.owner, {
+    _id: 0,
+    email: 1,
+    phone: 1,
+  });
+
+  return res.status(200).json({ notice, contacts });
 };
 
 // Restricted routes
