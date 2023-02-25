@@ -60,7 +60,7 @@ const sendVerifyMail = async (toEmail, verificationId, name) => {
       from: PETLY_EMAIL,
       to: toEmail,
       subject: "E-mail verification",
-      html: `<h1>Hello ${name}!</h1> <a href="${BASE_URL}/api/users/verify/${verificationId}">Please confirm your e-mail</a>`,
+      html: `<h1>Hello ${name}!</h1> <a href="${BASE_URL}/api/users/verify/${verificationId}" target="_blank">Please confirm your e-mail</a>`,
     };
 
     const transport = nodemailer.createTransport({
