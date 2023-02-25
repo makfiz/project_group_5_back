@@ -1,10 +1,10 @@
-const { dbUsers } = require("../../models/user");
-const { HttpError } = require("../../helpers/httpError");
-const { uploadToCloudinary } = require("../../middlewares/uploadAvatar");
-const { bufferToDataURI } = require("../../middlewares/upload");
-const { sendChangePassword } = require("../../helpers/sendVerifyMail");
-const { nanoid } = require("nanoid");
-const bcrypt = require("bcrypt");
+const { dbUsers } = require('../../models/user');
+const { HttpError } = require('../../helpers/httpError');
+const { uploadToCloudinary } = require('../../middlewares/uploadAvatar');
+const { bufferToDataURI } = require('../../middlewares/upload');
+const { sendChangePassword } = require('../../helpers/sendVerifyMail');
+const { nanoid } = require('nanoid');
+const bcrypt = require('bcrypt');
 
 const { FROM_EMAIL } = process.env;
 
@@ -13,10 +13,8 @@ async function updateUser(req, res, next) {
 
   const result = await dbUsers.findByIdAndUpdate(_id, req.body, { new: true });
 
-
-  
   if (!result) {
-    next(HttpError(404, "Not found"));
+    next(HttpError(404, 'Not found'));
   }
   res.status(200).json({
     _id: result._id,
@@ -32,25 +30,18 @@ async function editAvatar(req, res, next) {
   try {
     const { file } = req;
     const { _id } = req.user;
-    if (!file) throw new HttpError(400, "Image is required");
+    if (!file) throw new HttpError(400, 'Image is required');
 
-    const fileFormat = file.mimetype.split("/")[1];
+    const fileFormat = file.mimetype.split('/')[1];
     const { base64 } = bufferToDataURI(fileFormat, file.buffer);
 
     const imageDetails = await uploadToCloudinary(base64, fileFormat);
-    avatarUrl = imageDetails.url;
+    const avatarURL = imageDetails.url;
 
-    const result = await dbUsers.findByIdAndUpdate(
-      _id,
-      { avatarUrl },
-      { new: true }
-    );
+    await dbUsers.findByIdAndUpdate(_id, { avatarURL });
 
     res.json({
-      status: "success",
-      message: "Upload successful",
-      data: imageDetails,
-      avatarUrl: result.avatarUrl,
+      avatarURL,
     });
   } catch (error) {
     next(new HttpError(error.statusCode || 500, error.message));
@@ -63,18 +54,18 @@ const updatePassword = async (req, res) => {
 
   const user = await dbUsers.findById(_id);
   if (!user) {
-    throw HttpError(400, "Not found");
+    throw HttpError(400, 'Not found');
   }
 
   const passwordCompare = await bcrypt.compare(password, user.password);
   if (!passwordCompare) {
-    throw HttpError(400, "Password is wrong");
+    throw HttpError(400, 'Password is wrong');
   }
 
   const hashPassword = await bcrypt.hash(newPassword, 10);
   await dbUsers.findByIdAndUpdate(_id, { password: hashPassword });
 
-  res.json({ message: "Password updated successfully" });
+  res.json({ message: 'Password updated successfully' });
 };
 
 const restorePassword = async (req, res, toEmail) => {
@@ -90,18 +81,18 @@ const restorePassword = async (req, res, toEmail) => {
   );
 
   if (!updatedUser) {
-    throw HttpError(404, "Not found");
+    throw HttpError(404, 'Not found');
   }
 
   const infoEmail = {
     from: FROM_EMAIL,
     to: toEmail,
-    subject: "Restore access",
+    subject: 'Restore access',
     html: `<p>Your new password for petly: ${newPassword}</p> <p>You can change it in your account</p>`,
   };
 
   await sendChangePassword(infoEmail);
-  res.json({ message: "New password was sent on your email" });
+  res.json({ message: 'New password was sent on your email' });
 };
 
 module.exports = { updateUser, editAvatar, updatePassword, restorePassword };
