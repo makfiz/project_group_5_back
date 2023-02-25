@@ -1,5 +1,6 @@
 const { dbUsers } = require("../../models/user");
 const { HttpError } = require("../../helpers/httpError");
+const { sendConfirmMail } = require("../../helpers/sendVerifyMail");
 
 async function verifyMail(req, res, next) {
 	const { verificationToken } = req.params;
@@ -16,11 +17,10 @@ async function verifyMail(req, res, next) {
 		verifyEmail: true,
 		verificationToken: "",
 	});
-
+	const { email, name } = user;
+	await sendConfirmMail(email, name);
 	// res.redirect(`${FRONTEND_URL}/api/users/login?token=${token}&email=${email}&id=${id}`);
-	return res.status(200).json({
-		message: "Verification successful",
-	});
+	return;
 }
 
 module.exports = verifyMail;
