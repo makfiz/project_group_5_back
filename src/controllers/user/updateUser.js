@@ -23,6 +23,7 @@ async function updateUser(req, res, next) {
     birthday: result.birthday,
     phone: result.phone,
     city: result.city,
+    avatarURL: result.avatarURL,
   });
 }
 
