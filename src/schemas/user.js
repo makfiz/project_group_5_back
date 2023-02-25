@@ -2,39 +2,44 @@ const Joi = require("joi");
 
 // const emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const emailRegExp =
-  /^[a-z0-9!#$%&'+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'+/=?^_`{|}~-]+)@(?:[a-z0-9](?:[a-z0-9-][a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+  /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+const passRegExp = /^[^\s]{7,32}$/;
+const nameRegExp = /^(?![\d+_@.-]+$)[a-zA-Z0-9+_@.-]*$/;
+const cityRegExp = /^[a-zA-Zа-яА-ЯіІїЇґҐ']+(?:[\s-][a-zA-Zа-яА-ЯіІїЇґҐ']+)*,\s*[a-zA-Zа-яА-ЯіІїЇґҐ']+(?:[\s-][a-zA-Zа-яА-ЯіІїЇґҐ']+)*$/;
+const phoneRegExp = /^\+380\d{9}$/;
+const birthdayRegExp = /^(0?[1-9]|[1-2][0-9]|3[0-1])\.(0?[1-9]|1[0-2])\.\d{4}$/;
 
 const registerSchema = Joi.object({
   // бібліотека для перевірки - схема для перевірки (як propTypes)
-  name: Joi.string().min(2).required(),
-  password: Joi.string().min(6).required(),
+  name: Joi.string().pattern(nameRegExp).required(),
+  password: Joi.string().pattern(passRegExp).required(),
   email: Joi.string().pattern(emailRegExp).required(),
-  city: Joi.string().min(2).required(),
-  phone: Joi.string().min(2).required(),
+  city: Joi.string().pattern(cityRegExp).required(),
+  phone: Joi.string().pattern(phoneRegExp).required(),
   token: Joi.string(),
 });
 
 const loginSchema = Joi.object({
   // бібліотека для перевірки - схема для перевірки (як propTypes)
-  password: Joi.string().min(6).required(),
+  password: Joi.string().pattern(passRegExp).required(),
   email: Joi.string().pattern(emailRegExp).required(),
 });
 
 const userUpdateSchema = Joi.object({
-  name: Joi.string(),
+  name: Joi.string().pattern(nameRegExp),
   email: Joi.string().pattern(emailRegExp),
-  birthday: Joi.string(),
-  phone: Joi.string(),
-  city: Joi.string(),
+  birthday: Joi.string().pattern(birthdayRegExp),
+  phone: Joi.string().pattern(phoneRegExp),
+  city: Joi.string().pattern(cityRegExp),
 });
 
 const updatePasswordSchema = Joi.object({
-  password: Joi.string().required(),
-  newPassword: Joi.string().required(),
+  password: Joi.string().pattern(passRegExp).required(),
+  newPassword: Joi.string().pattern(passRegExp).required(),
 });
 
 const restorePasswordSchema = Joi.object({
-  email: Joi.string().email().required(),
+  email: Joi.string().pattern(emailRegExp).email().required(),
 });
 
 const joiSchemaUser = {
