@@ -23,7 +23,7 @@ const schema = mongoose.Schema(
       type: String,
       // match: passRegExp,
       minlength: 7,
-      maxlength: 32,
+      // maxlength: 32,
       required: [true, "Password is required"],
     },
     name: {
