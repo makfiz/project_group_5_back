@@ -138,6 +138,46 @@
         }
       }
     },
+    "/users/upload": {
+      "patch": {
+        "summary": "Uploads the user's avatar",
+        "tags": ["Users"],
+        "security": [{ "Bearer": [] }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": { "type": "string" },
+                    "avatarURL": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
     "/users/logout": {
       "get": {
         "summary": "Logs out current logged in user session",
@@ -274,6 +314,59 @@
           "200": { "description": "Pet deleted" },
           "404": { "description": "Pet not found" },
           "401": { "description": "Not authorized or token invalid" }
+        }
+      }
+    },
+    "/pets/{petId}/upload": {
+      "patch": {
+        "summary": "Uploads an image of a pet",
+        "tags": ["Pets"],
+        "security": [{ "Bearer": [] }],
+        "parameters": [
+          {
+            "name": "petId",
+            "in": "path",
+            "required": true,
+            "description": "pet id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "petImage": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": { "type": "string" },
+                    "petImage": { "type": "string" }
+                  }
+                }
+              }
+            }
+          },
+          "401": { "description": "Not authorized or token invalid" },
+          "404": { "description": "Pet not found" }
         }
       }
     },
@@ -611,7 +704,7 @@
       "patch": {
         "summary": "Uploads an image",
         "tags": ["Notices"],
-        "consumes": ["multipart/form-data"],
+        "security": [{ "Bearer": [] }],
         "parameters": [
           {
             "name": "noticeId",
@@ -622,24 +715,40 @@
               "type": "string",
               "example": "63ee9215d22829d9f530e6b3"
             }
-          },
-          {
-            "name": "file",
-            "in": "formData",
-            "description": "file to upload",
-            "required": true,
-            "type": "file"
           }
         ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "img": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "successful operation",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Notice" }
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "_id": { "type": "string" },
+                    "photoURL": { "type": "string" }
+                  }
+                }
               }
             }
           },
+          "401": { "description": "Not authorized or token invalid" },
           "404": { "description": "Notice not found" }
         }
       }
