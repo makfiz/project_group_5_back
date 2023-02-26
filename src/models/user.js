@@ -40,7 +40,7 @@ const schema = mongoose.Schema(
     phone: {
       type: String,
       match: phoneRegExp,
-      minlength: 12,
+      // minlength: 12,
       default: "",
     },
     birthday: {
