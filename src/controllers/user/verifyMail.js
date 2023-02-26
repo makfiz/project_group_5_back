@@ -20,7 +20,9 @@ async function verifyMail(req, res, next) {
     const { email, name } = user;
     await sendConfirmMail(email, name);
     // res.redirect(`${FRONTEND_URL}/api/users/login?token=${token}&email=${email}&id=${id}`);
-    return;
+    return res.status(200).json({
+        message: "Verification successful",
+    });
 }
 
 module.exports = verifyMail;
