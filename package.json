@@ -31,6 +31,7 @@
     "passport": "^0.6.0",
     "passport-google-oauth2": "^0.2.0",
     "path": "^0.12.7",
+    "short-uuid": "^4.2.2",
     "swagger-ui-express": "^4.6.0",
     "uuid": "^9.0.0"
   },
