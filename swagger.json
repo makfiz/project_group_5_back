@@ -606,6 +606,43 @@
           "404": { "description": "Not found notice by this id" }
         }
       }
+    },
+    "/notices/{noticeId}/upload": {
+      "patch": {
+        "summary": "Uploads an image",
+        "tags": ["Notices"],
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "name": "noticeId",
+            "in": "path",
+            "required": true,
+            "description": "notice id",
+            "schema": {
+              "type": "string",
+              "example": "63ee9215d22829d9f530e6b3"
+            }
+          },
+          {
+            "name": "file",
+            "in": "formData",
+            "description": "file to upload",
+            "required": true,
+            "type": "file"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "successful operation",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/Notice" }
+              }
+            }
+          },
+          "404": { "description": "Notice not found" }
+        }
+      }
     }
   },
   "definitions": {
