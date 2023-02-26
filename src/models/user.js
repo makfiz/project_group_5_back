@@ -21,14 +21,14 @@ const schema = mongoose.Schema(
     },
     password: {
       type: String,
-      match: passRegExp,
+      // match: passRegExp,
       minlength: 7,
-      maxlength: 32,
+      // maxlength: 32,
       required: [true, "Password is required"],
     },
     name: {
       type: String,
-      match: nameRegExp,
+      // match: nameRegExp,
       required: [true, "Name is required"],
     },
     city: {

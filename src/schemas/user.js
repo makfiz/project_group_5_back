@@ -11,8 +11,8 @@ const birthdayRegExp = /^(0?[1-9]|[1-2][0-9]|3[0-1])\.(0?[1-9]|1[0-2])\.\d{4}$/;
 
 const registerSchema = Joi.object({
   // бібліотека для перевірки - схема для перевірки (як propTypes)
-  name: Joi.string().pattern(nameRegExp).required(),
-  password: Joi.string().pattern(passRegExp).required(),
+  name: Joi.string().required(),
+  password: Joi.string().required(),
   email: Joi.string().pattern(emailRegExp).required(),
   city: Joi.string().pattern(cityRegExp).required(),
   phone: Joi.string().pattern(phoneRegExp).required(),
@@ -21,12 +21,12 @@ const registerSchema = Joi.object({
 
 const loginSchema = Joi.object({
   // бібліотека для перевірки - схема для перевірки (як propTypes)
-  password: Joi.string().pattern(passRegExp).required(),
+  password: Joi.string().required(),
   email: Joi.string().pattern(emailRegExp).required(),
 });
 
 const userUpdateSchema = Joi.object({
-  name: Joi.string().pattern(nameRegExp),
+  name: Joi.string(),
   email: Joi.string().pattern(emailRegExp),
   birthday: Joi.string().pattern(birthdayRegExp),
   phone: Joi.string().pattern(phoneRegExp),
@@ -34,7 +34,7 @@ const userUpdateSchema = Joi.object({
 });
 
 const updatePasswordSchema = Joi.object({
-  password: Joi.string().pattern(passRegExp).required(),
+  password: Joi.string().required(),
   newPassword: Joi.string().pattern(passRegExp).required(),
 });
 
