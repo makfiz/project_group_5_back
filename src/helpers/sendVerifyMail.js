@@ -39,6 +39,7 @@ const sendVerifyMail = async (toEmail, verificationId, name) => {
       to: toEmail,
       subject: "E-mail verification",
       html: `<h1>Hello ${name}!</h1> <a href="${BASE_URL}/api/users/verify/${verificationId}">Please confirm your e-mail</a>`,
+      // html: `<h1>Hello ${name}!</h1> <a href="http://localhost:3000/api/users/verify/${verificationId}">Please confirm your e-mail</a>`,
     };
 
     const transport = nodemailer.createTransport({
