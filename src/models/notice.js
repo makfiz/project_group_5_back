@@ -1,17 +1,17 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 const notice = new Schema(
   {
     category: {
       type: String,
-      enum: ["sell", "lost_found", "in_good_hands"],
-      required: [true, "Category is required"],
+      enum: ['sell', 'lost_found', 'in_good_hands'],
+      required: [true, 'Category is required'],
     },
     title: {
       type: String,
       minLength: 2,
       maxLength: 48,
-      required: [true, "Title is required"],
+      required: [true, 'Title is required'],
     },
     name: {
       type: String,
@@ -28,20 +28,20 @@ const notice = new Schema(
     },
     sex: {
       type: String,
-      enum: ["male", "female"],
-      required: [true, "The sex is required"],
+      enum: ['male', 'female'],
+      required: [true, 'The sex is required'],
     },
     location: {
       type: String,
-      required: [true, "Place is required"],
+      required: [true, 'Place is required'],
     },
     price: {
       type: String,
-      // required: [true, "Price is required"],
+      required: [true, 'Price is required'],
     },
     photoURL: {
       type: String,
-      default: "",
+      default: '',
     },
     comments: {
       type: String,
@@ -54,11 +54,11 @@ const notice = new Schema(
 
     owner: {
       type: Schema.Types.ObjectId,
-      ref: "users",
+      ref: 'users',
     },
   },
   { versionKey: false, timestamps: true }
 );
 
-const dbNotice = model("notice", notice);
+const dbNotice = model('notice', notice);
 module.exports = { dbNotice };
