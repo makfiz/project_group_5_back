@@ -33,7 +33,11 @@ const uploadPetImage = async (req, res, next) => {
 
   const imageDetails = await uploadToCloudinary(base64, fileFormat);
 
-  const updatePet = await Pet.findById(petId, req.body);
+  const updatePet = await Pet.findByIdAndUpdate(
+    petId,
+    { petImage: imageDetails.url },
+    { new: true }
+  );
   updatePet.petImage = imageDetails.url;
   await updatePet.save();
 

@@ -1,8 +1,8 @@
-const createError = require("http-errors");
-const { dbNotice } = require("../models/notice");
-const { dbUsers } = require("../models/user");
-const { uploadToCloudinary } = require("../middlewares/uploadAvatar");
-const { bufferToDataURI } = require("../middlewares/upload");
+const createError = require('http-errors');
+const { dbNotice } = require('../models/notice');
+const { dbUsers } = require('../models/user');
+const { uploadToCloudinary } = require('../middlewares/uploadAvatar');
+const { bufferToDataURI } = require('../middlewares/upload');
 
 const getAllNoticesByCategoryController = async (req, res, next) => {
   const { category } = req.params;
@@ -17,13 +17,13 @@ const getAllNoticesByCategoryPaginatedController = async (req, res, next) => {
   const skip = +limit * +page - +limit;
 
   const notices = await dbNotice
-    .find({ category, title: { $regex: new RegExp(search, "i") } })
+    .find({ category, title: { $regex: new RegExp(search, 'i') } })
     .skip(skip)
     .limit(pageLimit)
     .sort({ updatedAt: -1 });
 
   const totalCount = await dbNotice
-    .find({ category, title: { $regex: new RegExp(search, "i") } })
+    .find({ category, title: { $regex: new RegExp(search, 'i') } })
     .count();
   const totalPages = Math.ceil(totalCount / limit);
 
@@ -36,7 +36,7 @@ const getAllNoticesBySearchController = async (req, res, next) => {
   const skip = +limit * +page - +limit;
 
   const notices = await dbNotice
-    .find({ title: { $regex: new RegExp(search, "i") } })
+    .find({ title: { $regex: new RegExp(search, 'i') } })
     .skip(skip)
     .limit(pageLimit)
     .sort({ updatedAt: -1 });
@@ -48,7 +48,7 @@ const getOneNoticeByIdController = async (req, res, next) => {
 
   const notice = await dbNotice.findById(noticeId);
   if (!notice) {
-    return next(createError(404, "Notfound"));
+    return next(createError(404, 'Notfound'));
   }
 
   const contacts = await dbUsers.findById(notice.owner, {
@@ -80,7 +80,7 @@ const getFavoriteNoticesController = async (req, res, next) => {
 
   const notices = await dbNotice.find({
     favoritesIn: _id,
-    title: { $regex: new RegExp(search, "i") },
+    title: { $regex: new RegExp(search, 'i') },
   });
 
   return res.status(200).json({ notices });
@@ -104,7 +104,7 @@ const addNoticeByCategoryController = async (req, res, next) => {
 
   const notice = await dbNotice.create({ ...req.body, owner: userId });
   if (!notice) {
-    return next(createError(400, "Creating error"));
+    return next(createError(400, 'Creating error'));
   }
   return res.status(201).json({ notice });
 };
@@ -115,7 +115,7 @@ const getOwnNoticesController = async (req, res, next) => {
 
   const notices = await dbNotice.find({
     owner: _id,
-    title: { $regex: new RegExp(search, "i") },
+    title: { $regex: new RegExp(search, 'i') },
   });
 
   return res.status(200).json({ notices });
@@ -134,26 +134,28 @@ const deleteOwnNoticeController = async (req, res, next) => {
   const ownerIdString = notice.owner.toString();
 
   if (ownerIdString !== _id.toString()) {
-    return next(createError(403, "Forbidden"));
+    return next(createError(403, 'Forbidden'));
   }
 
   await dbNotice.findByIdAndRemove(noticeId);
-  return res.status(200).json({ message: "Notice  deleted", noticeId });
+  return res.status(200).json({ message: 'Notice  deleted', noticeId });
 };
 
 const uploadNoticeImage = async (req, res, next) => {
   const { file } = req;
   const { noticeId } = req.params;
-  if (!file) return next(createError(400, "Image is required"));
+  if (!file) return next(createError(400, 'Image is required'));
 
-  const fileFormat = file.mimetype.split("/")[1];
+  const fileFormat = file.mimetype.split('/')[1];
   const { base64 } = bufferToDataURI(fileFormat, file.buffer);
 
   const noticeImg = await uploadToCloudinary(base64, fileFormat);
 
-  const updateNotice = await dbNotice.findById(noticeId, req.body);
-  updateNotice.photoURL = noticeImg.url;
-  await updateNotice.save();
+  const updateNotice = await dbNotice.findByIdAndUpdate(
+    noticeId,
+    { photoURL: noticeImg.url },
+    { new: true }
+  );
 
   return res.json({
     id: updateNotice._id,
