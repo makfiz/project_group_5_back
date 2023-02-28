@@ -16,7 +16,6 @@ function generatePassword(length) {
     return password;
 };
 
-
 const googleParams = {
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
@@ -25,25 +24,23 @@ const googleParams = {
 };
 
 const googleCallback = async (req, accessToken, refreshToken, profile, done) => {
-    try {
-        const { email, displayName } = profile;
-        const user = await dbUsers.findOne({ email });
+  try {
+    const { email, displayName } = profile;
+    const user = await dbUsers.findOne({ email });
 
-        if (user) {
-            return done(null, user);
-        }
-
-        const acauntPassword = generatePassword(10);
-        const password = await bcrypt.hash(acauntPassword, 10);
-        const newUser = await dbUsers.create({ email, password, name: displayName, verifyEmail: true, verificationToken: "" });
-        await sendPasswordMail(email, acauntPassword, displayName);
-        done(null, newUser);
-        
-
-
-    } catch (error) {
-        done(error, false);
+    if (user) {
+      return done(null, user);
     }
+
+    const acauntPassword = generatePassword(10);
+    const password = await bcrypt.hash(acauntPassword, 10);
+    const newUser = await dbUsers.create({ email, password, name: displayName, verifyEmail: true, verificationToken: "" });
+    await sendPasswordMail(email, acauntPassword, displayName);
+    done(null, newUser);
+
+  } catch (error) {
+    done(error, false);
+  }
 }
 
 const googleStrategy = new Strategy(googleParams, googleCallback);

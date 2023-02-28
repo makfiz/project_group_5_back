@@ -83,30 +83,5 @@ const sendPasswordMail = async (toEmail, password, name) => {
   }
 };
 
-const sendChangePassword = async (toEmail, newPassword) => {
-  try {
-    const email = {
-      from: PETLY_EMAIL,
-      to: toEmail,
-      subject: "Restore access",
-      html: `<p>Your new password for petly: ${newPassword}</p> <p>You can change it in your account</p>`,
-    };
-
-    const transport = nodemailer.createTransport({
-      host: 'smtp.meta.ua',
-      port: 465,
-      secure: true,
-      auth: {
-        user: PETLY_EMAIL,
-        pass: PETLY_PASSWORD,
-      },
-    });
-
-    await transport.sendMail(email);
-  } catch (error) {
-    console.error("app error:", error);
-  }
-};
-
-module.exports = { sendVerifyMail, sendChangePassword, sendPasswordMail };
+module.exports = { sendVerifyMail, sendPasswordMail };
 
