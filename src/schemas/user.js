@@ -1,6 +1,5 @@
 const Joi = require("joi");
 
-// const emailRegExp = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const emailRegExp =
   /^((?!-)([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 const passRegExp = /^[^\s]{7,32}$/;
@@ -10,7 +9,6 @@ const phoneRegExp = /^\+3\d{11}$/;
 const birthdayRegExp = /^(0?[1-9]|[1-2][0-9]|3[0-1])\.(0?[1-9]|1[0-2])\.\d{4}$/;
 
 const registerSchema = Joi.object({
-  // бібліотека для перевірки - схема для перевірки (як propTypes)
   name: Joi.string().required(),
   password: Joi.string().required(),
   email: Joi.string().pattern(emailRegExp).required(),
@@ -20,7 +18,6 @@ const registerSchema = Joi.object({
 });
 
 const loginSchema = Joi.object({
-  // бібліотека для перевірки - схема для перевірки (як propTypes)
   password: Joi.string().required(),
   email: Joi.string().pattern(emailRegExp).required(),
 });
