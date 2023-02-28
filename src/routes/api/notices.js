@@ -3,10 +3,8 @@ const routerNotices = express.Router();
 
 const { tryCatchWrapper } = require("../../helpers/index");
 const { validateBody, validateParams } = require("../../middlewares/index");
-const {
-  createNoticeSchema,
-  schemaNoticesByCategory,
-} = require("../../schemas/noticesByCategory");
+const { schemaNoticesByCategory } = require("../../schemas/noticesByCategory");
+const { createNoticeSchema } = require("../../schemas/createNoticeSchema");
 
 const authIdent = require("../../middlewares/authIdent");
 const { upload } = require("../../middlewares/uploadAvatar");
