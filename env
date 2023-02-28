@@ -1,0 +1,4 @@
+PORT = 3000
+HOST_URI= mongodb+srv://admin:028358ukR2Yw7nTx@cluster0.rkbfdec.mongodb.net/db-contacts?retryWrites=true&w=majority
+JWT_SECRET=4815162342
+AUTHMetaPass = 23Apr1995
