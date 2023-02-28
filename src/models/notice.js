@@ -46,7 +46,7 @@ const notice = new Schema(
     comments: {
       type: String,
       minLength: 8,
-      maxLength: 24,
+      maxLength: 120,
     },
     favoritesIn: {
       type: Array,
