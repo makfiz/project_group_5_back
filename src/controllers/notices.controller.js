@@ -63,21 +63,12 @@ const getOneNoticeByIdController = async (req, res, next) => {
 // Restricted routes
 const addNoticeToFavoriteController = async (req, res, next) => {
   const { _id: userId } = req.user;
-
   const { noticeId } = req.params;
-  const askedNotice = await dbNotice.findById(noticeId);
-  const { favoritesIn } = askedNotice;
-  if (favoritesIn.includes(userId)) {
-    return next(createError(400, "Already in favorites"));
-  }
 
   const notice = await dbNotice.findByIdAndUpdate(
     noticeId,
-    { favoritesIn: [...favoritesIn, userId] },
-    {
-      new: true,
-      runValidators: true,
-    }
+    { $push: { favoritesIn: userId } },
+    { new: true }
   );
 
   return res.status(201).json({ notice });
@@ -97,26 +88,12 @@ const getFavoriteNoticesController = async (req, res, next) => {
 
 const deleteNoticeFromFavoriteController = async (req, res, next) => {
   const { _id: userId } = req.user;
-
   const { noticeId } = req.params;
-  const askedNotice = await dbNotice.findById(noticeId);
 
-  if (!askedNotice) {
-    return next(createError(404, "Not found"));
-  }
-
-  const { favoritesIn } = askedNotice;
   const notice = await dbNotice.findByIdAndUpdate(
     noticeId,
-    {
-      favoritesIn: favoritesIn.filter(
-        (id) => id.toString() !== userId.toString()
-      ),
-    },
-    {
-      new: true,
-      runValidators: true,
-    }
+    { $pull: { favoritesIn: userId } },
+    { new: true }
   );
 
   return res.status(200).json({ notice });
@@ -146,7 +123,6 @@ const getOwnNoticesController = async (req, res, next) => {
 
 const deleteOwnNoticeController = async (req, res, next) => {
   const { _id } = req.user;
-
   const { noticeId } = req.params;
 
   const notice = await dbNotice.findById(noticeId);
